@@ -9,7 +9,9 @@
     "start": "next start",
     "lint": "eslint",
     "gen": "pnpm run gen:swapi",
-    "gen:swapi": "node scripts/gen-swapi-schema.ts"
+    "gen:swapi": "pnpm run gen:swapi:schema && pnpm run gen:swapi:sample",
+    "gen:swapi:schema": "node scripts/gen-swapi-schema.ts",
+    "gen:swapi:sample": "node scripts/gen-swapi-sample-data.ts"
   },
   "dependencies": {
     "lucide-react": "^0.575.0",

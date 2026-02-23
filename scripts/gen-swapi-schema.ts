@@ -16,7 +16,7 @@ import { toSingularForm } from "./lib/singularForm.ts";
 import { toPascalCase } from "./lib/toPascalCase.ts";
 import { fetchJSON } from "./lib/fetchJSON.ts";
 
-const SWAPI_BASE_URL = "https://swapi.info/api";
+import { SWAPI_BASE_URL } from "./config.ts";
 
 const processEntity = async (entity: string, url: string) => {
   const singularEntity = toSingularForm(entity);
@@ -51,6 +51,7 @@ const processEntity = async (entity: string, url: string) => {
     `export type ${typeName} = v.InferOutput<typeof ${schemaName}>;`,
   ].join("\n");
 
+  // TODO: move to config.ts
   const absolutePath = new URL(
     `../types/swapi-schema/${schemaName}.ts`,
     import.meta.url,
@@ -63,7 +64,7 @@ const processEntity = async (entity: string, url: string) => {
 };
 
 async function main() {
-  console.info("Fetching SWAPI schema...");
+  console.info("Generating SWAPI schemas...");
   const entities = (await fetchJSON(`${SWAPI_BASE_URL}`)) as Record<
     string,
     string

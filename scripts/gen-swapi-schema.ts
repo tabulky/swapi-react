@@ -14,16 +14,9 @@ import { jsonSchemaToValibot } from "json-schema-to-valibot/dist/index.mjs";
 
 import { toSingularForm } from "./lib/singularForm.ts";
 import { toPascalCase } from "./lib/toPascalCase.ts";
+import { fetchJSON } from "./lib/fetchJSON.ts";
 
 const SWAPI_BASE_URL = "https://swapi.info/api";
-
-const fetchJSON = async (url: string | URL) => {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status} ${response.statusText} (${url})`);
-  }
-  return response.json();
-};
 
 const processEntity = async (entity: string, url: string) => {
   const singularEntity = toSingularForm(entity);

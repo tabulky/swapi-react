@@ -7,6 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "lint": "eslint",
     "gen": "pnpm run gen:swapi",
     "gen:swapi": "pnpm run gen:swapi:schema && pnpm run gen:swapi:sample",
@@ -31,6 +33,7 @@
     "json-schema-to-valibot": "^0.3.0",
     "prettier": "^3.8.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.0.18"
   }
 }

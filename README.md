@@ -4,6 +4,33 @@
 
 Purpose of this project is to show skills with React, TypeScript and Next.js.
 
+### Globa State Management
+
+This project is using pure React Context API for demonstration purposes.
+
+For RESTful resource, better alternatives are for example
+[Tanstack's React Query](https://tanstack.com/query/v5/docs/framework/react/overview) or
+[React Redux](https://react-redux.js.org/)
+
+## API Notes
+
+There are at least two choices:
+
+- ✅ [swapi.info](https://swapi.info/) (in use)
+  - ❌ Missing pagination & search
+  - ✅ JSON Schema
+- ❌ [swapi.dev](https://swapi.dev/)
+  - ✅ Have pagination & search
+  - ❌ JSON Schema not working, see
+    [#37](https://github.com/Juriy/swapi/issues/37),
+    [⎇66](https://github.com/Juriy/swapi/pull/66)
+
+## SWAPI Types from JSON Schema
+
+You can automatically generate schemas and types from OpenAPI.
+Run `pnpm gen:swapi` command which will write schemas with inferred types using
+[valibot](https://valibot.dev/) library.
+
 ## Developer guidelines
 
 - Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#specification) convention for commit messages

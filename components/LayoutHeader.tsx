@@ -1,14 +1,7 @@
 import Link from "next/link";
-import { ThemeToggle } from "@/components/ThemeToggle";
 
-const NAV_LINKS = [
-  { label: "Planets", href: "#planets" },
-  { label: "People", href: "#people" },
-  { label: "Species", href: "#species" },
-  { label: "Starships", href: "#starships" },
-  { label: "Vehicles", href: "#vehicles" },
-  { label: "Films", href: "#films" },
-] as const;
+import { ThemeToggle } from "./ThemeToggle";
+import { appNavigationList } from "./appNavigationList";
 
 export default function LayoutHeader() {
   return (
@@ -17,7 +10,7 @@ export default function LayoutHeader() {
 
       <nav>
         <ul className="flex items-center gap-6">
-          {NAV_LINKS.map(({ label, href }) => (
+          {appNavigationList.map(({ label, href }) => (
             <li key={href}>
               <Link
                 href={href}

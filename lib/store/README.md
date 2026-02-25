@@ -108,7 +108,7 @@ An honest comparison, treating `createStoreProvider` as a standalone package com
 - Async patterns
 - Memoization
 - Ecosystem
-- SSR / hydration (advanced: server-to-client store transfer, `<Provider store={…}>`)
+- SSR / hydration
 - Data fetching
 - Scalability
 - Community support
@@ -123,7 +123,7 @@ Use `createStoreProvider` when:
 - TypeScript inference matters more to you than runtime safety nets like Immer.
 - You **don't need** middleware, devtools, RTK Query, or normalized entity management.
 
-> **SSR note:** `useSelector` passes the current `state` as both the client and server snapshot to `useSyncExternalStore`. This means SSR renders reflect whatever state the store holds at render time (including any actions dispatched before rendering). If you need to pass a pre-hydrated store from server to client (e.g. to avoid a hydration mismatch after async data loading), consider `react-redux` which has explicit support for that pattern.
+> **SSR note:** `useSelector` passes `initialState` as the server snapshot to `useSyncExternalStore`. This means SSR always renders the initial state; any actions dispatched before rendering are not reflected on the server. SSR/hydration support is currently an open question for this library — consider `react-redux` if you need server-to-client state transfer.
 
 Use `react-redux` + RTK when:
 

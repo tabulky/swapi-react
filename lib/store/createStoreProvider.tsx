@@ -155,7 +155,7 @@ export const createStoreProvider = <S, A>(
     return useSyncExternalStore(
       subscribe,
       () => selector(state),
-      () => selector(state),
+      () => selector(initialState),
     );
   };
 

@@ -1,4 +1,5 @@
 import { ThemeProvider } from "next-themes";
+import { SwapiFetchProvider } from "@/lib/swapi/createSwapiStore";
 
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -32,8 +33,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <LayoutHeader />
-          {children}
+          <SwapiFetchProvider>
+            <LayoutHeader />
+            {children}
+          </SwapiFetchProvider>
         </ThemeProvider>
       </body>
     </html>

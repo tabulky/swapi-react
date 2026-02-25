@@ -1,7 +1,10 @@
-export default async function Planets() {
+import PlanetsTable from "@/components/PlanetsTable";
+
+export default function Planets() {
   return (
     <main>
       <h1 className="text-4xl font-bold m-4">Planets</h1>
+      <PlanetsTable />
     </main>
   );
 }

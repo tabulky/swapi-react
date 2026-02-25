@@ -8,20 +8,25 @@ import { Tag } from "./Tag";
 export default function PlanetsTable() {
   const planets = useSwapiResource(PlanetsResource);
 
-  if (planets.state === "loading") return <p>Loading planets…</p>;
-  if (planets.state === "error") return <p>Error: {planets.error?.message}</p>;
-  if (!planets.data) return null;
+  if (planets.state === "stale") {
+    return <p>⚠️ Warning: Data may be outdated!</p>;
+  }
+  if (planets.state === "loading") return <p>⏳ Loading planets…</p>;
+  if (planets.state === "error") {
+    return <p>❌ Error: {planets.error?.message}</p>;
+  }
+  if (!planets.data) return <p>🤔 No planets found?</p>;
 
   return (
     <table className="w-full border-collapse text-sm">
       <thead>
         <tr className="border-b border-foreground/20 text-left">
-          <th className="p-2">Name</th>
-          <th className="p-2">Climate</th>
-          <th className="p-2">Terrain</th>
-          <th className="p-2">Population</th>
-          <th className="p-2">Diameter</th>
-          <th className="p-2">Gravity</th>
+          <th scope="col" className="p-2">Name</th>
+          <th scope="col" className="p-2">Climate</th>
+          <th scope="col" className="p-2">Terrain</th>
+          <th scope="col" className="p-2">Population</th>
+          <th scope="col" className="p-2">Diameter</th>
+          <th scope="col" className="p-2">Gravity</th>
         </tr>
       </thead>
       <tbody>

@@ -116,6 +116,7 @@ export const createStoreProvider = <S, A extends Action>(
   const Provider: FC<{ children: ReactNode }> = ({ children }) => (
     <ProviderContext.Provider value={true}>{children}</ProviderContext.Provider>
   );
+  Provider.displayName = "StoreProvider";
 
   const useSelector = <T,>(selector: (state: Readonly<S>) => T): T => {
     useGuard();

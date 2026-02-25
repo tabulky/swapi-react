@@ -23,6 +23,10 @@ export type FetchStore = {
    * Fetches, caches, and subscribes to a resource.
    * Multiple consumers of the same resolved URL share a single fetch.
    *
+   * `def` must be a **stable reference** (e.g. a module-level constant created
+   * with {@link defineResource}). An unstable `def` (recreated on every render)
+   * will cancel and restart the fetch on every render.
+   *
    * @throws If called outside of `<FetchProvider>`.
    */
   useResource: {

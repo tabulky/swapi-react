@@ -1,12 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import {
   createStoreProvider,
   type Action,
   type Reducer,
 } from "../store/createStoreProvider";
-import type { ResourceDefinition, ResourceItem } from "./types";
+import type {
+  ResourceDefinition,
+  ResourceItem,
+  UseResourceResult,
+} from "./types";
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -30,11 +34,11 @@ export type FetchStore = {
    * @throws If called outside of `<FetchProvider>`.
    */
   useResource: {
-    <T>(def: ResourceDefinition<T, []>): ResourceItem<T>;
+    <T>(def: ResourceDefinition<T, []>): UseResourceResult<T>;
     <T, Args extends unknown[]>(
       def: ResourceDefinition<T, Args>,
       ...args: Args
-    ): ResourceItem<T>;
+    ): UseResourceResult<T>;
   };
 };
 
@@ -68,6 +72,7 @@ type ResourceAction = Action &
     | { type: "FETCH_START"; url: string }
     | { type: "FETCH_SUCCESS"; url: string; data: unknown }
     | { type: "FETCH_ERROR"; url: string; error: Error }
+    | { type: "FETCH_REFETCH"; url: string }
   );
 
 // ---------------------------------------------------------------------------
@@ -120,6 +125,13 @@ const reducer: Reducer<ResourceStore, ResourceAction> = (state, action) => {
         ...state,
         [action.url]: { ...prev, state: "error" as const, error: action.error },
       };
+    case "FETCH_REFETCH":
+      // Clear error, preserve data (stale-while-revalidate), reset to stale.
+      // Does not touch pendingCount or abort controllers.
+      return {
+        ...state,
+        [action.url]: { ...prev, error: null, state: "stale" as const },
+      };
   }
 };
 
@@ -159,15 +171,61 @@ export const createFetchStore = (): FetchStore => {
     ResourceAction
   >(reducer, {});
 
-  function useResource<T>(def: ResourceDefinition<T, []>): ResourceItem<T>;
+  /**
+   * Dispatches FETCH_START and kicks off a fetch for the given URL.
+   * Manages the AbortController and promise on the entry's metadata.
+   * Does **not** touch `pendingCount` — callers are responsible for that.
+   */
+  const startFetch = (
+    url: string,
+    parse: (raw: unknown) => unknown,
+    dispatch: (action: ResourceAction) => void,
+  ): void => {
+    dispatch({ type: "FETCH_START", url });
+
+    // Re-read after dispatch — reducer created a new item.
+    const entry = getState()[url] as InternalResourceItem;
+    const meta = ensureMeta(entry);
+
+    const controller = new AbortController();
+    meta.abortController = controller;
+
+    const promise = fetch(url, { signal: controller.signal })
+      .then((res) => {
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        return res.json();
+      })
+      .then((raw) => {
+        dispatch({ type: "FETCH_SUCCESS", url, data: parse(raw) });
+      })
+      .catch((err) => {
+        if (err.name !== "AbortError") {
+          dispatch({
+            type: "FETCH_ERROR",
+            url,
+            error: err instanceof Error ? err : new Error(String(err)),
+          });
+        }
+      })
+      .finally(() => {
+        meta.promise = null;
+        meta.abortController = null;
+      });
+
+    meta.promise = promise;
+  };
+
+  function useResource<T>(
+    def: ResourceDefinition<T, []>,
+  ): UseResourceResult<T>;
   function useResource<T, Args extends unknown[]>(
     def: ResourceDefinition<T, Args>,
     ...args: Args
-  ): ResourceItem<T>;
+  ): UseResourceResult<T>;
   function useResource<T, Args extends unknown[]>(
     def: ResourceDefinition<T, Args>,
     ...args: Args
-  ): ResourceItem<T> {
+  ): UseResourceResult<T> {
     const dispatch = useDispatch();
     const resolvedUrl =
       typeof def.url === "function" ? def.url(...args) : def.url;
@@ -193,43 +251,12 @@ export const createFetchStore = (): FetchStore => {
       }
 
       // Kick off a new fetch.
-      dispatch({ type: "FETCH_START", url: resolvedUrl });
+      startFetch(resolvedUrl, def.parse, dispatch);
 
-      // Re-read after dispatch — reducer created a new item.
+      // Re-read after dispatch — startFetch created a new item.
       const entry = getState()[resolvedUrl] as InternalResourceItem;
       const meta = ensureMeta(entry);
       meta.pendingCount++;
-
-      const controller = new AbortController();
-      meta.abortController = controller;
-
-      const promise = fetch(resolvedUrl, { signal: controller.signal })
-        .then((res) => {
-          if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-          return res.json();
-        })
-        .then((raw) => {
-          dispatch({
-            type: "FETCH_SUCCESS",
-            url: resolvedUrl,
-            data: def.parse(raw),
-          });
-        })
-        .catch((err) => {
-          if (err.name !== "AbortError") {
-            dispatch({
-              type: "FETCH_ERROR",
-              url: resolvedUrl,
-              error: err instanceof Error ? err : new Error(String(err)),
-            });
-          }
-        })
-        .finally(() => {
-          meta.promise = null;
-          meta.abortController = null;
-        });
-
-      meta.promise = promise;
 
       return () => {
         meta.pendingCount--;
@@ -241,11 +268,25 @@ export const createFetchStore = (): FetchStore => {
       };
     }, [resolvedUrl, dispatch, def]);
 
-    return useSelector((s) =>
+    const refetch = useCallback(() => {
+      if (resolvedUrl === null) return;
+      // No-op if a request is already in flight.
+      const current = getState()[resolvedUrl];
+      if (current) {
+        const meta = ensureMeta(current);
+        if (meta.abortController) return;
+      }
+      dispatch({ type: "FETCH_REFETCH", url: resolvedUrl });
+      startFetch(resolvedUrl, def.parse, dispatch);
+    }, [resolvedUrl, dispatch, def]);
+
+    const item = useSelector((s) =>
       resolvedUrl !== null
         ? ((s[resolvedUrl] ?? STALE_ITEM) as ResourceItem<T>)
         : (STALE_ITEM as ResourceItem<T>),
     );
+
+    return { ...item, refetch };
   }
 
   return { FetchProvider: Provider, useResource };

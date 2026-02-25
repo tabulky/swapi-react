@@ -31,6 +31,16 @@ export type ResourceItem<T = unknown> = {
 };
 
 /**
+ * What {@link useResource} returns to components.
+ * Extends {@link ResourceItem} with a `refetch` function.
+ *
+ * @typeParam T - Parsed data type (inferred from the parser).
+ */
+export type UseResourceResult<T = unknown> = ResourceItem<T> & {
+  readonly refetch: () => void;
+};
+
+/**
  * A bound pairing of URL (or URL factory) and parser.
  * Created with {@link defineResource} — never construct manually.
  *

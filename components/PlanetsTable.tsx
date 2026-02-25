@@ -1,9 +1,8 @@
 "use client";
 
-import {
-  PlanetsResource,
-  useSwapiResource,
-} from "@/lib/swapi/createSwapiStore";
+import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
+import { PlanetsResource } from "@/lib/swapi/resources";
+
 import { Tag } from "./Tag";
 
 export default function PlanetsTable() {

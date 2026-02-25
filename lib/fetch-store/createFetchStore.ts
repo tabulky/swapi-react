@@ -6,16 +6,7 @@ import {
   type Action,
   type Reducer,
 } from "../store/createStoreProvider";
-import type {
-  ResourceDefinition,
-  ResourceFetchState,
-  ResourceItem,
-  ResourceParser,
-} from "./types";
-
-// Re-export public types and defineResource so existing imports keep working.
-export { defineResource } from "./defineResource";
-export type { ResourceDefinition, ResourceFetchState, ResourceItem, ResourceParser };
+import type { ResourceDefinition, ResourceItem } from "./types";
 
 // ---------------------------------------------------------------------------
 // Public types

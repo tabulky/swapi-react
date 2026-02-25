@@ -2,7 +2,7 @@
 
 A single-file, zero-dependency, Redux-inspired state management micro-library for React 18+.
 
-`createStoreProvider` gives you the familiar `useSelector` / `useDispatch` API in **~60 lines of TypeScript**, backed entirely by React's built-in `useSyncExternalStore`. No middleware layer, no devtools protocol, no selector memoization library — just the reducer pattern wired up to a subscription model.
+`createStoreProvider` gives you the familiar `useSelector` / `useDispatch` API in **~60 lines of core logic (plus comments and docs)**, backed entirely by React's built-in `useSyncExternalStore`. No middleware layer, no devtools protocol, no selector memoization library — just the reducer pattern wired up to a subscription model.
 
 ## API
 

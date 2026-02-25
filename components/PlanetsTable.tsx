@@ -4,6 +4,7 @@ import {
   PlanetsResource,
   useSwapiResource,
 } from "@/lib/swapi/createSwapiStore";
+import { Tag } from "./Tag";
 
 export default function PlanetsTable() {
   const planets = useSwapiResource(PlanetsResource);
@@ -28,8 +29,16 @@ export default function PlanetsTable() {
         {planets.data.map((planet) => (
           <tr key={planet.url} className="border-b border-foreground/10">
             <td className="p-2 font-medium">{planet.name}</td>
-            <td className="p-2">{planet.climate}</td>
-            <td className="p-2">{planet.terrain}</td>
+            <td className="p-2">
+              {planet.climate.map((climate) => (
+                <Tag key={climate}>{climate}</Tag>
+              ))}
+            </td>
+            <td className="p-2">
+              {planet.terrain.map((terrain) => (
+                <Tag key={terrain}>{terrain}</Tag>
+              ))}
+            </td>
             <td className="p-2">{planet.population}</td>
             <td className="p-2">{planet.diameter}</td>
             <td className="p-2">{planet.gravity}</td>

@@ -23,7 +23,9 @@ export default function LayoutHeader() {
         </ul>
       </nav>
 
-      <ThemeToggle />
+      <div className="w-6">
+        <ThemeToggle />
+      </div>
     </header>
   );
 }

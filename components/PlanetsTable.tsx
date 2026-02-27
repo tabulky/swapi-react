@@ -4,31 +4,24 @@ import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import { PlanetsResource } from "@/lib/swapi/resources";
 
 import { Tag } from "./Tag";
+import { TableLoadingState } from "./TableLoadingState";
 
 export default function PlanetsTable() {
   const planets = useSwapiResource(PlanetsResource);
 
-  if ((planets.state === "loading" || planets.state === "stale") && !planets.data) {
-    return <p>⏳ Loading planets…</p>;
-  }
-  if (planets.state === "error") {
-    return <p>❌ Error: {planets.error?.message}</p>;
-  }
-  if (planets.state === "success" && !planets.data) return <p>🤔 No planets found?</p>;
-
   return (
     <div>
-      {planets.state === "stale"
-        ? <p>⚠️ Warning: Data may be outdated!</p>
-        : null}
-
-      <div>
+      <div className="flex items-center gap-2 px-2">
         <button
-          className="rounded bg-foreground/10 px-2 py-1 text-sm hover:bg-foreground/20"
-          onClick={() => planets.refetch()}
+          className="font-bold rounded bg-foreground/10 px-2 py-1 hover:bg-foreground/20"
+          onClick={() => planets.refetch(true)}
         >
-          🔄 Refetch
+          Refresh
         </button>
+
+        <div>
+          <TableLoadingState resource={planets} />
+        </div>
       </div>
 
       <table className="w-full border-collapse text-sm">
@@ -43,7 +36,7 @@ export default function PlanetsTable() {
           </tr>
         </thead>
         <tbody>
-          {planets.data.map((planet) => (
+          {planets.data?.map((planet) => (
             <tr key={planet.url} className="border-b border-foreground/10">
               <td className="p-2 font-medium">{planet.name}</td>
               <td className="p-2">

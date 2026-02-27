@@ -26,7 +26,7 @@ export type ResourceParser<T> = (raw: unknown) => T;
  */
 export type ResourceItem<T = unknown> = {
   readonly data: T | null;
-  readonly error: Error | null;
+  readonly error: { message: string } | null;
   readonly state: ResourceFetchState;
 };
 
@@ -37,7 +37,13 @@ export type ResourceItem<T = unknown> = {
  * @typeParam T - Parsed data type (inferred from the parser).
  */
 export type UseResourceResult<T = unknown> = ResourceItem<T> & {
-  readonly refetch: () => void;
+  /**
+   * Triggers a refetch of the resource. If `force` is `true`, any pending fetch will be aborted before starting a new one.
+   * Calling `refetch` while a fetch is already in-flight will do nothing, unless `force` is set to `true`.
+   * @param force When current pendig fetch should be aborted
+   * @returns
+   */
+  readonly refetch: (force?: boolean) => void;
 };
 
 /**

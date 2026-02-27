@@ -1,5 +1,3 @@
-"use client";
-
 import {
   createContext,
   type FC,
@@ -120,10 +118,13 @@ export const createStoreProvider = <S, A extends Action>(
 
   const useSelector = <T,>(selector: (state: Readonly<S>) => T): T => {
     useGuard();
+
     return useSyncExternalStore(
       subscribe,
       () => selector(state),
-      () => selector(initialState),
+      // If you see warning pointing here from your devtools,
+      // it may be caused by creating new objects in selector in your store implementation.
+      () => selector(state),
     );
   };
 

@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "swapi-react",
+  "compatibility_date": "2026-03-01",
+  "compatibility_flags": ["nodejs_compat", "nodejs_als"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
+  },
+  "r2_buckets": [
+    {
+      "bucket_name": "swapi-react-opennext-cache",
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+    },
+  ],
+}

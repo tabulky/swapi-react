@@ -13,11 +13,32 @@
   --foreground: #ededed;
 }
 
+@keyframes flash-success {
+  0%,
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes flash-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --animate-flash-success: flash-success 2s ease-out forwards;
+  --animate-flash-in: flash-in 0.4s ease-out forwards;
 }
 
 body {

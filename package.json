@@ -14,7 +14,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint",
-    "gen": "pnpm run gen:swapi",
+    "gen": "pnpm run gen:swapi && pnpm run cf-typegen",
     "gen:swapi": "pnpm run gen:swapi:schema && pnpm run gen:swapi:sample",
     "gen:swapi:schema": "node scripts/gen-swapi-schema.ts",
     "gen:swapi:sample": "node scripts/gen-swapi-sample-data.ts",

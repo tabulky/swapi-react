@@ -7,17 +7,7 @@
 
 import * as v from "valibot";
 import { personSchema, type Person } from "./swapi-schema/personSchema";
-
-const RE_SPLIT_COMMA = /,\s*/;
-
-/** Converts a string to a number if possible, otherwise returns the original string. */
-const toNumberOrString = v.pipe(
-  v.string(),
-  v.transform((str): number | string => {
-    const num = Number(str);
-    return Number.isNaN(num) ? str : num;
-  }),
-);
+import { toNumberOrString, toStringArray } from "./viewSchemaHelpers";
 
 export const personViewSchema = v.object({
   ...personSchema.entries,
@@ -27,18 +17,9 @@ export const personViewSchema = v.object({
   height: toNumberOrString,
   mass: toNumberOrString,
   // override fields, converting comma-separated strings to string arrays
-  hair_color: v.pipe(
-    v.string(),
-    v.transform((str) => str.split(RE_SPLIT_COMMA).map((s) => s.trim())),
-  ),
-  skin_color: v.pipe(
-    v.string(),
-    v.transform((str) => str.split(RE_SPLIT_COMMA).map((s) => s.trim())),
-  ),
-  eye_color: v.pipe(
-    v.string(),
-    v.transform((str) => str.split(RE_SPLIT_COMMA).map((s) => s.trim())),
-  ),
+  hair_color: toStringArray,
+  skin_color: toStringArray,
+  eye_color: toStringArray,
   // foreign key fields
   homeworld: v.pipe(v.string(), v.url()),
   films: v.array(v.pipe(v.string(), v.url())),

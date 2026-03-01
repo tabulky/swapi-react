@@ -6,6 +6,15 @@ import { PlanetsResource } from "@/lib/swapi/resources";
 import { Tag } from "./Tag";
 import { TableLoadingState } from "./TableLoadingState";
 
+function MixedCell({ value }: { value: number | string }) {
+  const isNumber = typeof value === "number";
+  return (
+    <td className={`p-2 tabular-nums${isNumber ? " text-right" : ""}`}>
+      {isNumber ? value.toLocaleString() : value}
+    </td>
+  );
+}
+
 export default function PlanetsTable() {
   const planets = useSwapiResource(PlanetsResource);
 
@@ -52,8 +61,8 @@ export default function PlanetsTable() {
                   <Tag key={terrain}>{terrain}</Tag>
                 ))}
               </td>
-              <td className="p-2">{planet.population}</td>
-              <td className="p-2">{planet.diameter}</td>
+              <MixedCell value={planet.population} />
+              <MixedCell value={planet.diameter} />
               <td className="p-2">{planet.gravity}</td>
             </tr>
           ))}

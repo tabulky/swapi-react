@@ -7,17 +7,7 @@
 
 import * as v from "valibot";
 import { planetSchema, type Planet } from "./swapi-schema/planetSchema";
-
-const RE_SPLIT_COMMA = /,\s*/;
-
-/** Converts a string to a number if possible, otherwise returns the original string. */
-const toNumberOrString = v.pipe(
-  v.string(),
-  v.transform((str): number | string => {
-    const num = Number(str);
-    return Number.isNaN(num) ? str : num;
-  }),
-);
+import { toNumberOrString, toStringArray } from "./viewSchemaHelpers";
 
 export const planetViewSchema = v.object({
   ...planetSchema.entries,
@@ -30,14 +20,8 @@ export const planetViewSchema = v.object({
   surface_water: toNumberOrString,
   population: toNumberOrString,
   // override fields, converting comma-separated strings to string arrays
-  climate: v.pipe(
-    v.string(),
-    v.transform((str) => str.split(RE_SPLIT_COMMA).map((s) => s.trim())),
-  ),
-  terrain: v.pipe(
-    v.string(),
-    v.transform((str) => str.split(RE_SPLIT_COMMA).map((s) => s.trim())),
-  ),
+  climate: toStringArray,
+  terrain: toStringArray,
   // foreign key fields
   residents: v.array(v.pipe(v.string(), v.url())),
   films: v.array(v.pipe(v.string(), v.url())),

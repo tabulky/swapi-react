@@ -11,6 +11,7 @@ import { format } from "prettier";
 
 // there is some bug in node/package, other import variant does not work
 import { jsonSchemaToValibot } from "json-schema-to-valibot/dist/index.mjs";
+import type { JsonSchemaObject } from "json-schema-to-valibot";
 
 import { toSingularForm } from "./lib/singularForm.ts";
 import { toPascalCase } from "./lib/toPascalCase.ts";
@@ -24,11 +25,11 @@ const processEntity = async (entity: string, url: string) => {
   const typeName = toPascalCase(singularEntity);
   console.info(`Processing entity: ${entity}`);
 
-  const schema = await fetchJSON(`${url}/schema`);
+  const schema = (await fetchJSON(`${url}/schema`)) as JsonSchemaObject;
 
   // there is violation in data, so we need fix this manually
   if (entity === "species") {
-    schema.properties.homeworld = {
+    schema.properties!.homeworld = {
       type: ["string", "null"],
     };
   }

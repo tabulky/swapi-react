@@ -54,7 +54,7 @@ export default function PlanetsTable() {
                 ))}
               </td>
               <MixedCell value={planet.population} />
-              <MixedCell value={planet.diameter} />
+              <MixedCell value={planet.diameter} numericUnit=" km" />
               <td className="p-2">{planet.gravity}</td>
             </tr>
           ))}

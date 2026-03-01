@@ -3,8 +3,9 @@
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import { PlanetsResource } from "@/lib/swapi/resources";
 
-import { Tag } from "./Tag";
-import { TableLoadingState } from "./TableLoadingState";
+import { Tag } from "../Tag";
+import { TableLoadingState } from "../TableLoadingState";
+import { MixedCell } from "./MixedCell";
 
 export default function PlanetsTable() {
   const planets = useSwapiResource(PlanetsResource);
@@ -30,9 +31,12 @@ export default function PlanetsTable() {
             <th scope="col" className="p-2">Name</th>
             <th scope="col" className="p-2">Climate</th>
             <th scope="col" className="p-2">Terrain</th>
-            <th scope="col" className="p-2">Population</th>
-            <th scope="col" className="p-2">Diameter</th>
+            <th scope="col" className="p-2 text-center">Population</th>
+            <th scope="col" className="p-2 text-center">Diameter</th>
             <th scope="col" className="p-2">Gravity</th>
+            <th scope="col" className="p-2 text-center">Rotation Period</th>
+            <th scope="col" className="p-2 text-center">Orbital Period</th>
+            <th scope="col" className="p-2 text-center">Surface Water</th>
           </tr>
         </thead>
         <tbody>
@@ -52,9 +56,12 @@ export default function PlanetsTable() {
                   <Tag key={terrain}>{terrain}</Tag>
                 ))}
               </td>
-              <td className="p-2">{planet.population}</td>
-              <td className="p-2">{planet.diameter}</td>
+              <MixedCell value={planet.population} />
+              <MixedCell value={planet.diameter} numericUnit=" km" />
               <td className="p-2">{planet.gravity}</td>
+              <MixedCell value={planet.rotation_period} numericUnit=" h" />
+              <MixedCell value={planet.orbital_period} numericUnit=" days" />
+              <MixedCell value={planet.surface_water} numericUnit="%" />
             </tr>
           ))}
         </tbody>

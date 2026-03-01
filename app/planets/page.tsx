@@ -1,4 +1,4 @@
-import PlanetsTable from "@/components/PlanetsTable";
+import PlanetsTable from "@/components/table/PlanetsTable";
 
 export default function Planets() {
   return (

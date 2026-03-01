@@ -1,7 +1,8 @@
 /**
  * Enriched Planet schema for app use.
  * Extends the auto-generated planetSchema, overriding
- * `climate` and `terrain` from comma-separated strings to string arrays.
+ * `climate` and `terrain` from comma-separated strings to string arrays,
+ * and numeric string fields to `number | string`.
  */
 
 import * as v from "valibot";
@@ -9,10 +10,25 @@ import { planetSchema, type Planet } from "./swapi-schema/planetSchema";
 
 const RE_SPLIT_COMMA = /,\s*/;
 
+/** Converts a string to a number if possible, otherwise returns the original string. */
+const toNumberOrString = v.pipe(
+  v.string(),
+  v.transform((str): number | string => {
+    const num = Number(str);
+    return Number.isNaN(num) ? str : num;
+  }),
+);
+
 export const planetViewSchema = v.object({
   ...planetSchema.entries,
   // key field, not specified in the original schema
   url: v.pipe(v.string(), v.url()),
+  // numeric fields: convert to number when possible, keep string otherwise
+  rotation_period: toNumberOrString,
+  orbital_period: toNumberOrString,
+  diameter: toNumberOrString,
+  surface_water: toNumberOrString,
+  population: toNumberOrString,
   // override fields, converting comma-separated strings to string arrays
   climate: v.pipe(
     v.string(),

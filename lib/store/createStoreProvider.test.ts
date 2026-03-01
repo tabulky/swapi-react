@@ -26,24 +26,14 @@ describe("createStoreProvider", () => {
 
     it("dispatch updates state and getState reflects the new value", () => {
       const store = createStoreProvider(reducer, { count: 0 });
-      let capturedDispatch: ((action: Action) => void) | undefined;
 
-      function Capturer() {
-        capturedDispatch = store.useDispatch();
-        return null;
-      }
-
-      renderToString(
-        createElement(store.Provider, null, createElement(Capturer)),
-      );
-
-      capturedDispatch!({ type: "increment" });
+      store.dispatch({ type: "increment" });
       expect(store.getState()).toEqual({ count: 1 });
 
-      capturedDispatch!({ type: "increment" });
+      store.dispatch({ type: "increment" });
       expect(store.getState()).toEqual({ count: 2 });
 
-      capturedDispatch!({ type: "decrement" });
+      store.dispatch({ type: "decrement" });
       expect(store.getState()).toEqual({ count: 1 });
     });
   });
@@ -57,9 +47,9 @@ describe("createStoreProvider", () => {
         return null;
       }
 
-      expect(() =>
-        renderToString(createElement(TestComponent)),
-      ).toThrow("Store hooks must be used within their Provider");
+      expect(() => renderToString(createElement(TestComponent))).toThrow(
+        "Store hooks must be used within their Provider",
+      );
     });
 
     it("returns selected state when rendered inside <Provider>", () => {
@@ -76,21 +66,6 @@ describe("createStoreProvider", () => {
       );
 
       expect(selected).toBe(42);
-    });
-  });
-
-  describe("useDispatch", () => {
-    it("throws when rendered outside <Provider>", () => {
-      const store = createStoreProvider(reducer, { count: 0 });
-
-      function TestComponent() {
-        store.useDispatch();
-        return null;
-      }
-
-      expect(() =>
-        renderToString(createElement(TestComponent)),
-      ).toThrow("Store hooks must be used within their Provider");
     });
   });
 });

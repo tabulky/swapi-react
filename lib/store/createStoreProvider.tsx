@@ -33,14 +33,14 @@ export type StoreProvider<S, A> = {
    */
   useSelector: <T>(selector: (state: S) => T) => T;
 
-  /**
-   * Returns the stable dispatch function.
-   * @throws If called outside of `<Provider>`.
-   */
-  useDispatch: () => (action: A) => void;
-
   /** Returns the current state snapshot outside of React. */
   getState: () => Readonly<S>;
+
+  /**
+   * Stable dispatch function. Dispatches an action, updates state,
+   * and notifies subscribers.
+   */
+  dispatch: (action: A) => void;
 };
 
 /**
@@ -60,11 +60,10 @@ export type StoreProvider<S, A> = {
  *   }
  * };
  *
- * const { Provider, useSelector, useDispatch } = createStoreProvider(reducer, { count: 0 });
+ * const { Provider, useSelector, dispatch } = createStoreProvider(reducer, { count: 0 });
  *
  * function Counter() {
  *   const count = useSelector((s) => s.count);
- *   const dispatch = useDispatch();
  *   return <button onClick={() => dispatch({ type: "increment" })}>{count}</button>;
  * }
  *
@@ -128,12 +127,5 @@ export const createStoreProvider = <S, A extends Action>(
     );
   };
 
-  const useDispatch = () => {
-    useGuard();
-    // dispatch is stable for the lifetime of the store — closure guarantees
-    // referential stability without needing useCallback.
-    return dispatch;
-  };
-
-  return { Provider, useSelector, useDispatch, getState };
+  return { Provider, useSelector, getState, dispatch };
 };

@@ -160,7 +160,7 @@ const reducer: Reducer<ResourceStore, ResourceAction> = (state, action) => {
  * ```
  */
 export const createFetchStore = (): FetchStore => {
-  const { Provider, useSelector, useDispatch, getState } = createStoreProvider<
+  const { Provider, useSelector, dispatch, getState } = createStoreProvider<
     ResourceStore,
     ResourceAction
   >(reducer, {});
@@ -250,7 +250,6 @@ export const createFetchStore = (): FetchStore => {
     def: ResourceDefinition<T, Args>,
     ...args: Args
   ): UseResourceResult<T> {
-    const dispatch = useDispatch();
     const resolvedUrl =
       typeof def.url === "function" ? def.url(...args) : def.url;
 
@@ -259,7 +258,7 @@ export const createFetchStore = (): FetchStore => {
         if (resolvedUrl === null) return;
         startFetch(resolvedUrl, def.parse, dispatch, force);
       },
-      [resolvedUrl, dispatch, def],
+      [resolvedUrl, def],
     );
 
     useEffect(() => {

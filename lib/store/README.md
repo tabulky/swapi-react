@@ -1,6 +1,6 @@
 # createStoreProvider
 
-A scholarly, single-file implementation of Redux-style state islands for React 18+. Uses `useSyncExternalStore` under the hood. Each call produces an isolated store with its own `Provider`, `useSelector`, `useDispatch`, and `getState`.
+A scholarly, single-file implementation of Redux-style state islands for React 18+. Uses `useSyncExternalStore` under the hood. Each call produces an isolated store with its own `Provider`, `useSelector`, `dispatch`, and `getState`.
 
 Not a Redux replacement — a minimal study of the pattern.
 
@@ -38,7 +38,7 @@ Returns a `StoreProvider<S, A>`:
 | ------------- | --------------------------------- | -------------------------------------------------------------------------- |
 | `Provider`    | `FC<{ children: ReactNode }>`     | Wrap your tree to enable the hooks below.                                  |
 | `useSelector` | `<T>(selector: (s: S) => T) => T` | Derives a value from state; re-renders only on reference-equality changes. |
-| `useDispatch` | `() => (action: A) => void`       | Returns a stable dispatch function.                                        |
+| `dispatch`    | `(action: A) => void`             | Stable dispatch function. Updates state and notifies subscribers.          |
 | `getState`    | `() => Readonly<S>`               | Read current state outside React (tests, event handlers, etc.).            |
 
 ## Usage
@@ -58,13 +58,12 @@ const reducer: Reducer<State, Action> = (state, action) => {
   }
 };
 
-const { Provider, useSelector, useDispatch } = createStoreProvider(reducer, {
+const { Provider, useSelector, dispatch } = createStoreProvider(reducer, {
   count: 0,
 });
 
 function Counter() {
   const count = useSelector((s) => s.count);
-  const dispatch = useDispatch();
   return (
     <div>
       <span>{count}</span>
@@ -85,7 +84,7 @@ function App() {
 
 ## Relationship to Redux
 
-This is a distilled implementation of the Redux pattern — `(state, action) => state`, unidirectional data flow, `useSelector` / `useDispatch` hooks, context-based `<Provider>`.
+This is a distilled implementation of the Redux pattern — `(state, action) => state`, unidirectional data flow, `useSelector` / `dispatch`, context-based `<Provider>`.
 
 What it intentionally omits:
 

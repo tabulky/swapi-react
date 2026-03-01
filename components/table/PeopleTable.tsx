@@ -1,70 +1,84 @@
 "use client";
 
+import type { PersonView } from "@/types/personView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import { PeopleResource } from "@/lib/swapi/resources";
 
+import type { ColumnDef } from "../resource-table/columns";
 import { Tag } from "../Tag";
-import { TableLoadingState } from "../TableLoadingState";
-import { MixedCell } from "./MixedCell";
+import ResourceTable from "../resource-table/ResourceTable";
+
+import { MixedCell } from "./cells/MixedCell";
+
+const columns: ColumnDef<PersonView>[] = [
+  {
+    id: "name",
+    header: "Name",
+    sortable: true,
+    getSortValue: (p) => p.name,
+    cellClassName: "p-2 font-medium",
+    renderCell: (p) => p.name,
+  },
+  {
+    id: "gender",
+    header: "Gender",
+    sortable: true,
+    getSortValue: (p) => p.gender,
+    renderCell: (p) => p.gender,
+  },
+  {
+    id: "birth_year",
+    header: "Birth Year",
+    sortable: true,
+    getSortValue: (p) => p.birth_year,
+    renderCell: (p) => p.birth_year,
+  },
+  {
+    id: "height",
+    header: "Height",
+    headerClassName: "text-center",
+    sortable: true,
+    getSortValue: (p) => (typeof p.height === "number" ? p.height : null),
+    fullCell: true,
+    renderCell: (p) => <MixedCell value={p.height} numericUnit=" cm" />,
+  },
+  {
+    id: "mass",
+    header: "Mass",
+    headerClassName: "text-center",
+    sortable: true,
+    getSortValue: (p) => (typeof p.mass === "number" ? p.mass : null),
+    fullCell: true,
+    renderCell: (p) => <MixedCell value={p.mass} numericUnit=" kg" />,
+  },
+  {
+    id: "hair_color",
+    header: "Hair Color",
+    renderCell: (p) =>
+      p.hair_color.map((color) => <Tag key={color}>{color}</Tag>),
+  },
+  {
+    id: "eye_color",
+    header: "Eye Color",
+    renderCell: (p) =>
+      p.eye_color.map((color) => <Tag key={color}>{color}</Tag>),
+  },
+  {
+    id: "skin_color",
+    header: "Skin Color",
+    renderCell: (p) =>
+      p.skin_color.map((color) => <Tag key={color}>{color}</Tag>),
+  },
+];
 
 export default function PeopleTable() {
   const people = useSwapiResource(PeopleResource);
 
   return (
-    <div>
-      <div className="flex items-center gap-2 px-2">
-        <button
-          className="font-bold rounded bg-foreground/10 px-2 py-1 hover:bg-foreground/20"
-          onClick={() => people.refetch(true)}
-        >
-          Refresh
-        </button>
-
-        <div>
-          <TableLoadingState resource={people} />
-        </div>
-      </div>
-
-      <table className="w-full border-collapse text-sm">
-        <thead className="sticky top-0 bg-background/90 backdrop-blur-sm">
-          <tr className="border-b border-foreground/20 text-left">
-            <th scope="col" className="p-2">Name</th>
-            <th scope="col" className="p-2">Gender</th>
-            <th scope="col" className="p-2">Birth Year</th>
-            <th scope="col" className="p-2 text-center">Height</th>
-            <th scope="col" className="p-2 text-center">Mass</th>
-            <th scope="col" className="p-2">Hair Color</th>
-            <th scope="col" className="p-2">Eye Color</th>
-            <th scope="col" className="p-2">Skin Color</th>
-          </tr>
-        </thead>
-        <tbody>
-          {people.data?.map((person) => (
-            <tr
-              key={person.url}
-              className="border-b border-foreground/10 hover:bg-foreground/5"
-            >
-              <td className="p-2 font-medium">{person.name}</td>
-              <td className="p-2">{person.gender}</td>
-              <td className="p-2">{person.birth_year}</td>
-              <MixedCell value={person.height} numericUnit=" cm" />
-              <MixedCell value={person.mass} numericUnit=" kg" />
-              <td className="p-2">
-                {person.hair_color.map((color) => <Tag key={color}>{color}
-                </Tag>)}
-              </td>
-              <td className="p-2">
-                {person.eye_color.map((color) => <Tag key={color}>{color}
-                </Tag>)}
-              </td>
-              <td className="p-2">
-                {person.skin_color.map((color) => <Tag key={color}>{color}
-                </Tag>)}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <ResourceTable
+      resource={people}
+      columns={columns}
+      getRowKey={(p) => p.url}
+    />
   );
 }

@@ -1,7 +1,7 @@
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 
-import { MixedCell } from "@/components/table/MixedCell";
+import { MixedCell } from "@/components/table/cells/MixedCell";
 
 describe("MixedCell", () => {
   describe("numeric value", () => {

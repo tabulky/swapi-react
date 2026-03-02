@@ -16,6 +16,7 @@ const CRAWL_TRUNCATE_LENGTH = 150;
 function FilmCard({ film }: { film: FilmView }) {
   const [crawlExpanded, setCrawlExpanded] = useState(false);
 
+  const crawlId = `crawl-${film.episode_id}`;
   const crawlText = film.opening_crawl.replace(/\r\n/g, "\n");
   const isLongCrawl = crawlText.length > CRAWL_TRUNCATE_LENGTH;
 
@@ -48,7 +49,7 @@ function FilmCard({ film }: { film: FilmView }) {
         <h3 className="text-sm font-medium text-foreground/60 mb-1">
           Opening Crawl
         </h3>
-        <p className="text-sm whitespace-pre-line leading-relaxed">
+        <p id={crawlId} className="text-sm whitespace-pre-line leading-relaxed">
           {!crawlExpanded && isLongCrawl
             ? crawlText.slice(0, CRAWL_TRUNCATE_LENGTH) + "..."
             : crawlText}
@@ -56,6 +57,8 @@ function FilmCard({ film }: { film: FilmView }) {
         {isLongCrawl && (
           <button
             className="text-sm text-blue-600 dark:text-blue-400 mt-1 hover:underline"
+            aria-expanded={crawlExpanded}
+            aria-controls={crawlId}
             onClick={() => setCrawlExpanded(!crawlExpanded)}
           >
             {crawlExpanded ? "Show less" : "Show more"}

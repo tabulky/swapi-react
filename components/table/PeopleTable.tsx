@@ -4,7 +4,12 @@ import type { PersonView } from "@/types/personView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import { PeopleResource } from "@/lib/swapi/resources";
 
-import { ColumnPanel, ResourceTable, schemaColumn, useTableState } from "../resource-table";
+import {
+  ColumnPanel,
+  ResourceTable,
+  schemaColumn,
+  useTableState,
+} from "../resource-table";
 
 const col = schemaColumn<PersonView>();
 

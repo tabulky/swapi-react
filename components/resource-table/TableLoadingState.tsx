@@ -1,3 +1,4 @@
+// Internal component — not part of the public API.
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { UseResourceResult } from "@/lib/fetch-store/types";

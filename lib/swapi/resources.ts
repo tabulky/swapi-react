@@ -5,6 +5,7 @@ import { planetViewSchema, type PlanetView } from "@/types/planetView";
 import { personViewSchema, type PersonView } from "@/types/personView";
 import { filmViewSchema, type FilmView } from "@/types/filmView";
 import { starshipViewSchema, type StarshipView } from "@/types/starshipView";
+import { vehicleViewSchema, type VehicleView } from "@/types/vehicleView";
 
 const parsePlanets = (raw: unknown): PlanetView[] =>
   v.parse(v.array(planetViewSchema), raw);
@@ -36,4 +37,12 @@ const parseStarships = (raw: unknown): StarshipView[] =>
 export const StarshipsResource = defineResource(
   `${SWAPI_BASE_URL}/starships`,
   parseStarships,
+);
+
+const parseVehicles = (raw: unknown): VehicleView[] =>
+  v.parse(v.array(vehicleViewSchema), raw);
+
+export const VehiclesResource = defineResource(
+  `${SWAPI_BASE_URL}/vehicles`,
+  parseVehicles,
 );

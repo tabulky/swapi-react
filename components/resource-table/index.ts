@@ -1,6 +1,9 @@
 // Main component
 export { default as ResourceTable } from "./ResourceTable";
 
+// Column visibility & reorder panel
+export { default as ColumnPanel } from "./ColumnPanel";
+
 // Column factory
 export { schemaColumn } from "./schemaColumn";
 export type { ColumnType, SchemaColumnConfig } from "./schemaColumn";

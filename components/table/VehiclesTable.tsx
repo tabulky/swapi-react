@@ -4,7 +4,7 @@ import type { VehicleView } from "@/types/vehicleView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import { VehiclesResource } from "@/lib/swapi/resources";
 
-import { ResourceTable, schemaColumn, useTableState } from "../resource-table";
+import { ColumnPanel, ResourceTable, schemaColumn, useTableState } from "../resource-table";
 
 const col = schemaColumn<VehicleView>();
 
@@ -42,10 +42,13 @@ export default function VehiclesTable() {
   const tableState = useTableState(columns, vehicles.data);
 
   return (
-    <ResourceTable
-      resource={vehicles}
-      tableState={tableState}
-      getRowKey={(v) => v.url}
-    />
+    <>
+      <ColumnPanel tableState={tableState} />
+      <ResourceTable
+        resource={vehicles}
+        tableState={tableState}
+        getRowKey={(v) => v.url}
+      />
+    </>
   );
 }

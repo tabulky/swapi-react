@@ -4,7 +4,7 @@ import type { SpeciesView } from "@/types/speciesView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import { SpeciesResource } from "@/lib/swapi/resources";
 
-import { ResourceTable, schemaColumn } from "../resource-table";
+import { ResourceTable, schemaColumn, useTableState } from "../resource-table";
 
 const col = schemaColumn<SpeciesView>();
 
@@ -34,11 +34,12 @@ const columns = [
 
 export default function SpeciesTable() {
   const species = useSwapiResource(SpeciesResource);
+  const tableState = useTableState(columns, species.data);
 
   return (
     <ResourceTable
       resource={species}
-      columns={columns}
+      tableState={tableState}
       getRowKey={(s) => s.url}
     />
   );

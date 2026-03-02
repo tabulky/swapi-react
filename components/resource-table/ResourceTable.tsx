@@ -5,7 +5,6 @@ import { ChevronDown, ChevronsUpDown, ChevronUp } from "lucide-react";
 import { TableLoadingState } from "./TableLoadingState";
 
 import type { ResourceTableProps } from "./types";
-import { useTableState } from "./useTableState";
 
 // ---------------------------------------------------------------------------
 // Sort indicator shown in column headers
@@ -50,7 +49,7 @@ function SortIndicator({
 
 export default function ResourceTable<T extends Record<string, unknown>>({
   resource,
-  columns,
+  tableState,
   getRowKey,
 }: ResourceTableProps<T>) {
   const {
@@ -58,7 +57,7 @@ export default function ResourceTable<T extends Record<string, unknown>>({
     sortEntries,
     sortedData,
     toggleSort,
-  } = useTableState(columns, resource.data);
+  } = tableState;
 
   const multiSort = sortEntries.length > 1;
 

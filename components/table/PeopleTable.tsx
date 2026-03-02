@@ -4,7 +4,7 @@ import type { PersonView } from "@/types/personView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import { PeopleResource } from "@/lib/swapi/resources";
 
-import { ResourceTable, schemaColumn } from "../resource-table";
+import { ResourceTable, schemaColumn, useTableState } from "../resource-table";
 
 const col = schemaColumn<PersonView>();
 
@@ -25,11 +25,12 @@ const columns = [
 
 export default function PeopleTable() {
   const people = useSwapiResource(PeopleResource);
+  const tableState = useTableState(columns, people.data);
 
   return (
     <ResourceTable
       resource={people}
-      columns={columns}
+      tableState={tableState}
       getRowKey={(p) => p.url}
     />
   );

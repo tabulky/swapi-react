@@ -4,5 +4,5 @@ export const appNavigationList = [
   // { label: "Species", href: "/species" },
   // { label: "Starships", href: "/starships" },
   // { label: "Vehicles", href: "/vehicles" },
-  // { label: "Films", href: "/films" },
+  { label: "Films", href: "/films" },
 ] as const;

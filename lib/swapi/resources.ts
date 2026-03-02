@@ -3,6 +3,7 @@ import { defineResource } from "@/lib/fetch-store/defineResource";
 import { SWAPI_BASE_URL } from "./config";
 import { planetViewSchema, type PlanetView } from "@/types/planetView";
 import { personViewSchema, type PersonView } from "@/types/personView";
+import { filmViewSchema, type FilmView } from "@/types/filmView";
 
 const parsePlanets = (raw: unknown): PlanetView[] =>
   v.parse(v.array(planetViewSchema), raw);
@@ -18,4 +19,12 @@ const parsePersons = (raw: unknown): PersonView[] =>
 export const PeopleResource = defineResource(
   `${SWAPI_BASE_URL}/people`,
   parsePersons,
+);
+
+const parseFilms = (raw: unknown): FilmView[] =>
+  v.parse(v.array(filmViewSchema), raw);
+
+export const FilmsResource = defineResource(
+  `${SWAPI_BASE_URL}/films`,
+  parseFilms,
 );

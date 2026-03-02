@@ -45,6 +45,8 @@ export default function ColumnPanel<T extends Record<string, unknown>>({
     setColumnOrder(ids);
   };
 
+  const isLastVisible = visibleColumns.length <= 1;
+
   return (
     <div className="flex flex-wrap items-center gap-1.5 px-2 py-1.5">
       {allColumns.map(({ column, visible }) =>
@@ -52,14 +54,18 @@ export default function ColumnPanel<T extends Record<string, unknown>>({
           <button
             key={column.id}
             type="button"
-            draggable
+            draggable={!isLastVisible}
+            disabled={isLastVisible}
             onDragStart={() => onDragStart(column.id)}
             onDragOver={onDragOver}
             onDrop={() => onDrop(column.id)}
             onClick={() => toggleColumn(column.id)}
-            className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-xs font-medium
-              bg-foreground/10 hover:bg-foreground/20 cursor-grab active:cursor-grabbing
-              select-none transition-colors"
+            className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-xs font-medium
+              select-none transition-colors ${
+                isLastVisible
+                  ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 cursor-not-allowed"
+                  : "bg-foreground/10 hover:bg-foreground/20 cursor-grab active:cursor-grabbing"
+              }`}
           >
             <GripVertical size={12} className="opacity-40" />
             {column.header}

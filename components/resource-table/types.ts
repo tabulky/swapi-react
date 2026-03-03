@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import type { UseResourceResult } from "@/lib/fetch-store/types";
+import type { TableState } from "./useTableState";
 
 // ---------------------------------------------------------------------------
 // Sort primitives
@@ -93,8 +94,8 @@ export type ColumnDef<TRow extends Record<string, unknown>> = {
 export type ResourceTableProps<T extends Record<string, unknown>> = {
   /** The resource hook result — provides `data`, `state`, `refetch`. */
   readonly resource: UseResourceResult<T[]>;
-  /** Column definitions. Order here is the default column order. */
-  readonly columns: readonly ColumnDef<T>[];
+  /** Table state created by `useTableState` — owns columns, sort, and visibility. */
+  readonly tableState: TableState<T>;
   /** Extract a stable unique key from each row item. */
   readonly getRowKey: (item: T) => string;
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import type { StarshipView } from "@/types/starshipView";
+import type { StarshipView } from "@/lib/swapi/schema/starshipView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import { StarshipsResource } from "@/lib/swapi/resources";
 

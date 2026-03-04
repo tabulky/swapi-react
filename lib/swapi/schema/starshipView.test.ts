@@ -1,7 +1,7 @@
 import * as v from "valibot";
 
-import { toCorpStringArray } from "@/types/viewSchemaHelpers";
-import { starshipViewSchema } from "@/types/starshipView";
+import { toCorpStringArray } from "@/lib/swapi/schema/viewSchemaHelpers";
+import { starshipViewSchema } from "@/lib/swapi/schema/starshipView";
 
 import starships from "@/sample-data/swapi.info/starship.json";
 

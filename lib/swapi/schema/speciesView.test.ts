@@ -1,6 +1,6 @@
 import * as v from "valibot";
 
-import { speciesViewSchema } from "@/types/speciesView";
+import { speciesViewSchema } from "@/lib/swapi/schema/speciesView";
 
 import species from "@/sample-data/swapi.info/species.json";
 

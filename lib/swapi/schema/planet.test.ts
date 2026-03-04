@@ -1,14 +1,14 @@
 import * as v from "valibot";
 
-import { planetViewSchema } from "@/types/planetView";
+import { planetSchema } from "@/lib/swapi/schema/swapi-schema/planetSchema";
 
 import planets from "@/sample-data/swapi.info/planet.json";
 
-describe("planetViewSchema", () => {
+describe("planetSchema", () => {
   it("parses all sample planets from planet.json without errors", () => {
     let errorCount = 0;
     for (const planet of planets) {
-      const result = v.safeParse(planetViewSchema, planet);
+      const result = v.safeParse(planetSchema, planet);
       if (!result.success) {
         errorCount++;
       }

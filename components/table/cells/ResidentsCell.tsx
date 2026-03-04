@@ -3,7 +3,7 @@
 import { Tag } from "@/components/Tag";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import { PeopleResource } from "@/lib/swapi/resources";
-import { PersonView } from "@/types/personView";
+import { PersonView } from "@/lib/swapi/schema/personView";
 import { useMemo } from "react";
 
 export type ResidentsCellProps = {

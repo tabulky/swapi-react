@@ -1,6 +1,6 @@
 "use client";
 
-import type { SpeciesView } from "@/types/speciesView";
+import type { SpeciesView } from "@/lib/swapi/schema/speciesView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import { SpeciesResource } from "@/lib/swapi/resources";
 

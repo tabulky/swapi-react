@@ -1,14 +1,14 @@
 import * as v from "valibot";
 
-import { personSchema } from "@/types/swapi-schema/personSchema";
+import { personViewSchema } from "@/lib/swapi/schema/personView";
 
 import people from "@/sample-data/swapi.info/person.json";
 
-describe("personSchema", () => {
+describe("personViewSchema", () => {
   it("parses all sample people from person.json without errors", () => {
     let errorCount = 0;
     for (const person of people) {
-      const result = v.safeParse(personSchema, person);
+      const result = v.safeParse(personViewSchema, person);
       if (!result.success) {
         errorCount++;
       }

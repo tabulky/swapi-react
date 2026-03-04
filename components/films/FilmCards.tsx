@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { FilmView } from "@/types/filmView";
+import type { FilmView } from "@/lib/swapi/schema/filmView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import { FilmsResource } from "@/lib/swapi/resources";
 import { TableLoadingState } from "../resource-table/TableLoadingState";

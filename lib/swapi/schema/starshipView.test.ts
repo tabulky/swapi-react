@@ -1,9 +1,9 @@
 import * as v from "valibot";
 
-import { toCorpStringArray } from "@/lib/swapi/schema/viewSchemaHelpers";
-import { starshipViewSchema } from "@/lib/swapi/schema/starshipView";
+import { toCorpStringArray } from "./viewSchemaHelpers";
+import { starshipViewSchema } from "./starshipView";
 
-import starships from "@/sample-data/swapi.info/starship.json";
+import starships from "../sample-data/swapi.info/starship.json";
 
 describe("toCorpStringArray", () => {
   const parse = (input: string) => v.parse(toCorpStringArray, input);

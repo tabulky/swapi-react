@@ -6,6 +6,6 @@ export const SWAPI_SCHEMA_DIR = new URL(
 );
 
 export const SWAPI_SAMPLE_DATA_DIR = new URL(
-  "../sample-data/swapi.info/",
+  "../lib/swapi/sample-data/swapi.info/",
   import.meta.url,
 );

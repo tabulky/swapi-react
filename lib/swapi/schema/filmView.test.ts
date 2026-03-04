@@ -1,8 +1,8 @@
 import * as v from "valibot";
 
-import { filmViewSchema } from "@/lib/swapi/schema/filmView";
+import { filmViewSchema } from "./filmView";
 
-import films from "@/sample-data/swapi.info/film.json";
+import films from "../sample-data/swapi.info/film.json";
 
 describe("filmViewSchema", () => {
   it("parses all sample films from film.json without errors", () => {

@@ -1,8 +1,8 @@
 import * as v from "valibot";
 
-import { speciesViewSchema } from "@/lib/swapi/schema/speciesView";
+import { speciesViewSchema } from "./speciesView";
 
-import species from "@/sample-data/swapi.info/species.json";
+import species from "../sample-data/swapi.info/species.json";
 
 describe("speciesViewSchema", () => {
   it("parses all sample species from species.json without errors", () => {

@@ -1,8 +1,8 @@
 import * as v from "valibot";
 
-import { personSchema } from "@/lib/swapi/schema/swapi-schema/personSchema";
+import { personSchema } from "./swapi-schema/personSchema";
 
-import people from "@/sample-data/swapi.info/person.json";
+import people from "../sample-data/swapi.info/person.json";
 
 describe("personSchema", () => {
   it("parses all sample people from person.json without errors", () => {

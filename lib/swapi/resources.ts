@@ -1,12 +1,12 @@
 import * as v from "valibot";
 import { defineResource } from "@/lib/fetch-store/defineResource";
 import { SWAPI_BASE_URL } from "./config";
-import { planetViewSchema, type PlanetView } from "@/lib/swapi/schema/planetView";
-import { personViewSchema, type PersonView } from "@/lib/swapi/schema/personView";
-import { filmViewSchema, type FilmView } from "@/lib/swapi/schema/filmView";
-import { starshipViewSchema, type StarshipView } from "@/lib/swapi/schema/starshipView";
-import { vehicleViewSchema, type VehicleView } from "@/lib/swapi/schema/vehicleView";
-import { speciesViewSchema, type SpeciesView } from "@/lib/swapi/schema/speciesView";
+import { planetViewSchema, type PlanetView } from "./schema/planetView";
+import { personViewSchema, type PersonView } from "./schema/personView";
+import { filmViewSchema, type FilmView } from "./schema/filmView";
+import { starshipViewSchema, type StarshipView } from "./schema/starshipView";
+import { vehicleViewSchema, type VehicleView } from "./schema/vehicleView";
+import { speciesViewSchema, type SpeciesView } from "./schema/speciesView";
 
 const parsePlanets = (raw: unknown): PlanetView[] =>
   v.parse(v.array(planetViewSchema), raw);

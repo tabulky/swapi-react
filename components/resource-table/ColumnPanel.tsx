@@ -105,6 +105,7 @@ export default function ColumnPanel<T extends Record<string, unknown>>({
               onClick={() => !isDragging && toggleColumn(column.id)}
               style={indicatorStyle}
               className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-xs font-medium
+              border border-foreground/10
               select-none transition-shadow duration-150 ${
                 isLastVisible
                   ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 cursor-not-allowed"

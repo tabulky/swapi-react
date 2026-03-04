@@ -144,7 +144,7 @@ export default function ColumnPanel<T extends Record<string, unknown>>({
                 className="opacity-40 pointer-events-none"
                 aria-hidden
               />
-              <span className="pointer-events-none">+ {column.header}</span>
+              <span className="pointer-events-none">{column.header}</span>
             </button>
           );
       })}

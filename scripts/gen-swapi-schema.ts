@@ -52,10 +52,10 @@ const processEntity = async (entity: string, url: string) => {
     `export type ${typeName} = v.InferOutput<typeof ${schemaName}>;`,
   ].join("\n");
 
-  const absolutePath = `${SWAPI_SCHEMA_DIR}${schemaName}.ts`;
+  const fileUrl = new URL(`${schemaName}.ts`, SWAPI_SCHEMA_DIR);
 
   await writeFile(
-    absolutePath,
+    fileUrl,
     await format(moduleCode, { parser: "typescript" }),
   );
 };

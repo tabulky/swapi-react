@@ -21,10 +21,10 @@ const processEntity = async (entity: string, url: string) => {
 
   const entities = await fetchJSON(url);
 
-  const absolutePath = `${SWAPI_SAMPLE_DATA_DIR}${singularEntity}.json`;
+  const fileUrl = new URL(`${singularEntity}.json`, SWAPI_SAMPLE_DATA_DIR);
 
   await writeFile(
-    absolutePath,
+    fileUrl,
     await format(JSON.stringify(entities, null, 2), { parser: "json" }),
   );
 };

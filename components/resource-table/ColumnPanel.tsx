@@ -38,7 +38,7 @@ export default function ColumnPanel<T extends Record<string, unknown>>({
     dragId.current = null;
     if (!srcId || srcId === targetId) return;
 
-    const ids = visibleColumns.map((c) => c.id);
+    const ids = allColumns.map((c) => c.column.id);
     const srcIdx = ids.indexOf(srcId);
     const tgtIdx = ids.indexOf(targetId);
     if (srcIdx === -1 || tgtIdx === -1) return;
@@ -81,12 +81,18 @@ export default function ColumnPanel<T extends Record<string, unknown>>({
             key={column.id}
             type="button"
             aria-label={`Show ${column.header} column`}
+            draggable
+            onDragStart={() => onDragStart(column.id)}
+            onDragEnd={onDragEnd}
+            onDragOver={onDragOver}
+            onDrop={() => onDrop(column.id)}
             onClick={() => toggleColumn(column.id)}
             className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-xs font-medium
               border border-dashed border-foreground/20 opacity-50
               hover:opacity-80 hover:bg-foreground/5
               select-none transition-colors cursor-pointer"
           >
+            <GripVertical size={12} className="opacity-40" aria-hidden />
             + {column.header}
           </button>
         ),

@@ -92,10 +92,12 @@ export type ColumnDef<TRow extends Record<string, unknown>> = {
 
 /** Props accepted by `ResourceTable<T>`. */
 export type ResourceTableProps<T extends Record<string, unknown>> = {
-  /** The resource hook result — provides `data`, `state`, `refetch`. */
+  /** The resource hook result — provides `state` and `refetch`. */
   readonly resource: UseResourceResult<T[]>;
   /** Table state created by `useTableState` — owns columns, sort, and visibility. */
   readonly tableState: TableState<T>;
+  /** Sorted (or unsorted) rows to render, or `null` when not yet loaded. */
+  readonly data: T[] | null;
   /** Extract a stable unique key from each row item. */
   readonly getRowKey: (item: T) => string;
 };

@@ -4,7 +4,13 @@ import type { VehicleView } from "@/types/vehicleView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import { VehiclesResource } from "@/lib/swapi/resources";
 
-import { ColumnPanel, ResourceTable, schemaColumn, useTableState } from "../resource-table";
+import {
+  ColumnPanel,
+  ResourceTable,
+  schemaColumn,
+  useSortedData,
+  useTableState,
+} from "../resource-table";
 
 const col = schemaColumn<VehicleView>();
 
@@ -39,7 +45,12 @@ const columns = [
 
 export default function VehiclesTable() {
   const vehicles = useSwapiResource(VehiclesResource);
-  const tableState = useTableState(columns, vehicles.data);
+  const tableState = useTableState(columns);
+  const sortedData = useSortedData(
+    vehicles.data,
+    columns,
+    tableState.sortEntries,
+  );
 
   return (
     <>
@@ -47,6 +58,7 @@ export default function VehiclesTable() {
       <ResourceTable
         resource={vehicles}
         tableState={tableState}
+        data={sortedData}
         getRowKey={(v) => v.url}
       />
     </>

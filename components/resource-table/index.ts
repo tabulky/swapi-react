@@ -19,13 +19,16 @@ export type {
 export type { SortValue, SortDirection, SortEntry } from "./types";
 
 // Built-in cell components and their prop types (for extending or composing)
-export {
-  TextCell,
-  MixedCell,
-  TagArrayCell,
-} from "./cells";
+export { TextCell, MixedCell, TagArrayCell } from "./cells";
 export type { TextCellProps, MixedCellProps, TagArrayCellProps } from "./cells";
 
 // Table state hook and types (for building custom column-visibility controls)
 export { useTableState } from "./useTableState";
 export type { TableState, ColumnVisibility } from "./useTableState";
+
+// Focused sub-hooks (finer-grained alternative to useTableState)
+export { useColumnsState } from "./useColumnsState";
+export type { ColumnsState } from "./useColumnsState";
+export { useSortState } from "./useSortState";
+export type { SortState } from "./useSortState";
+export { useSortedData } from "./useSortedData";

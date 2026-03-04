@@ -1,181 +1,36 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import type { ColumnDef } from "./types";
+import { useColumnsState } from "./useColumnsState";
+import { useSortState } from "./useSortState";
 
-import type { ColumnDef, SortEntry } from "./types";
-import { sortData } from "./sortData";
+export type { ColumnVisibility } from "./useColumnsState";
+export type { ColumnsState } from "./useColumnsState";
+export type { SortState } from "./useSortState";
 
 // ---------------------------------------------------------------------------
 // Public return type
 // ---------------------------------------------------------------------------
 
-export type ColumnVisibility<T extends Record<string, unknown>> = {
-  readonly column: ColumnDef<T>;
-  readonly visible: boolean;
-};
-
-export type TableState<T extends Record<string, unknown>> = {
-  /** Visible columns in their current display order. */
-  readonly visibleColumns: ColumnDef<T>[];
-  /**
-   * All columns with their visibility flag.
-   * @reserved For a future column-visibility panel — not yet wired into `ResourceTable`.
-   */
-  readonly allColumns: ColumnVisibility<T>[];
-  /** Active multi-column sort chain. */
-  readonly sortEntries: SortEntry[];
-  /** Sorted (or unsorted) data, or `null` when not yet loaded. */
-  readonly sortedData: T[] | null;
-
-  // — Mutators —
-
-  /**
-   * Toggle a column's visibility on/off.
-   * @reserved For a future column-visibility panel — not yet wired into `ResourceTable`.
-   */
-  readonly toggleColumn: (columnId: string) => void;
-  /**
-   * Replace the full column order (array of visible IDs). Pass `null` to reset to default.
-   * @reserved For a future column-order UI — not yet wired into `ResourceTable`.
-   */
-  readonly setColumnOrder: (orderedIds: string[] | null) => void;
-  /**
-   * Toggle sorting on a column.
-   *
-   * - `multi=false` (default): replaces entire sort → cycles asc → desc → none.
-   * - `multi=true`: adds/cycles/removes this column within the sort chain.
-   */
-  readonly toggleSort: (columnId: string, multi?: boolean) => void;
-  /**
-   * Remove all sort entries.
-   * @reserved For a future "clear sort" UI control — not yet wired into `ResourceTable`.
-   */
-  readonly clearSort: () => void;
-};
+export type TableState<T extends Record<string, unknown>> = ReturnType<
+  typeof useColumnsState<T>
+> &
+  ReturnType<typeof useSortState<T>>;
 
 // ---------------------------------------------------------------------------
 // Hook
 // ---------------------------------------------------------------------------
 
 /**
- * Manages column visibility, order, and sort state for `ResourceTable`.
+ * Convenience hook that composes `useColumnsState` and `useSortState`.
  *
- * `visibleIds` starts as `null` (= show all columns in definition order),
- * avoiding any SSR/hydration mismatch on first render.
+ * For finer-grained control, use those hooks directly instead.
  */
 export function useTableState<T extends Record<string, unknown>>(
   columns: readonly ColumnDef<T>[],
-  data: T[] | null,
 ): TableState<T> {
-  // ----- State -----
+  const columnsState = useColumnsState(columns);
+  const sortState = useSortState(columns);
 
-  const [visibleIds, setVisibleIds] = useState<string[] | null>(null);
-  const [sortEntries, setSortEntries] = useState<SortEntry[]>([]);
-
-  // ----- Derive visible & all columns -----
-
-  const visibleColumns = useMemo<ColumnDef<T>[]>(() => {
-    if (visibleIds === null) return columns.slice() as ColumnDef<T>[];
-    // Resolve IDs back to column defs, preserving the stored ordering.
-    // Unknown IDs (stale values) are silently dropped.
-    const colMap = new Map(columns.map((c) => [c.id, c]));
-    return visibleIds
-      .map((id) => colMap.get(id))
-      .filter((c): c is ColumnDef<T> => c !== undefined);
-  }, [columns, visibleIds]);
-
-  const allColumns = useMemo<ColumnVisibility<T>[]>(() => {
-    const visibleSet = new Set(visibleColumns.map((c) => c.id));
-    return columns.map((col) => ({
-      column: col as ColumnDef<T>,
-      visible: visibleSet.has(col.id),
-    }));
-  }, [columns, visibleColumns]);
-
-  // ----- Sorted data -----
-
-  const sortedData = useMemo<T[] | null>(() => {
-    if (data === null) return null;
-    return sortData(data, columns as ColumnDef<T>[], sortEntries);
-  }, [data, columns, sortEntries]);
-
-  // ----- Mutators -----
-
-  const toggleColumn = useCallback(
-    (columnId: string) => {
-      // Current visible IDs (or all if defaulted)
-      const currentIds = visibleIds ?? (columns.map((c) => c.id) as string[]);
-      const idx = currentIds.indexOf(columnId);
-      const nextIds =
-        idx >= 0
-          ? currentIds.filter((id) => id !== columnId)
-          : [...currentIds, columnId];
-
-      // If result matches the default set & order, clear the stored value
-      const isDefault =
-        nextIds.length === columns.length &&
-        nextIds.every((id, i) => id === columns[i].id);
-
-      setVisibleIds(isDefault ? null : nextIds);
-    },
-    [visibleIds, columns],
-  );
-
-  const setColumnOrder = useCallback((orderedIds: string[] | null) => {
-    setVisibleIds(orderedIds);
-  }, []);
-
-  const toggleSort = useCallback(
-    (columnId: string, multi = false) => {
-      // Only allow toggling sortable columns
-      const col = columns.find((c) => c.id === columnId);
-      if (!col || !col.isSortable) return;
-
-      const current = sortEntries;
-      let next: SortEntry[];
-
-      const existingIdx = current.findIndex((e) => e.columnId === columnId);
-
-      if (multi) {
-        // Multi-column: add / cycle / remove within chain
-        if (existingIdx === -1) {
-          next = [...current, { columnId, direction: "asc" }];
-        } else if (current[existingIdx].direction === "asc") {
-          next = current.map((e, i) =>
-            i === existingIdx ? { ...e, direction: "desc" as const } : e,
-          );
-        } else {
-          // Was desc → remove
-          next = current.filter((_, i) => i !== existingIdx);
-        }
-      } else {
-        // Single-column: replace entire sort
-        if (existingIdx === -1) {
-          next = [{ columnId, direction: "asc" }];
-        } else if (current[existingIdx].direction === "asc") {
-          next = [{ columnId, direction: "desc" }];
-        } else {
-          next = []; // Was desc → clear
-        }
-      }
-
-      setSortEntries(next);
-    },
-    [columns, sortEntries],
-  );
-
-  const clearSort = useCallback(() => {
-    setSortEntries([]);
-  }, []);
-
-  return {
-    visibleColumns,
-    allColumns,
-    sortEntries,
-    sortedData,
-    toggleColumn,
-    setColumnOrder,
-    toggleSort,
-    clearSort,
-  };
+  return { ...columnsState, ...sortState };
 }

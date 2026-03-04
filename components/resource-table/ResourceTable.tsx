@@ -50,12 +50,12 @@ function SortIndicator({
 export default function ResourceTable<T extends Record<string, unknown>>({
   resource,
   tableState,
+  data,
   getRowKey,
 }: ResourceTableProps<T>) {
   const {
     visibleColumns,
     sortEntries,
-    sortedData,
     toggleSort,
   } = tableState;
 
@@ -84,7 +84,9 @@ export default function ResourceTable<T extends Record<string, unknown>>({
               const sortIndex = sortEntries.findIndex(
                 (e) => e.columnId === col.id,
               );
-              const sortEntry = sortIndex >= 0 ? sortEntries[sortIndex] : undefined;
+              const sortEntry = sortIndex >= 0
+                ? sortEntries[sortIndex]
+                : undefined;
 
               return (
                 <th
@@ -111,7 +113,7 @@ export default function ResourceTable<T extends Record<string, unknown>>({
           </tr>
         </thead>
         <tbody>
-          {sortedData?.map((item) => (
+          {data?.map((item) => (
             <tr
               key={getRowKey(item)}
               className="border-b border-foreground/10 hover:bg-foreground/5"

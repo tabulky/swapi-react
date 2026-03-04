@@ -4,7 +4,13 @@ import type { StarshipView } from "@/types/starshipView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import { StarshipsResource } from "@/lib/swapi/resources";
 
-import { ColumnPanel, ResourceTable, schemaColumn, useTableState } from "../resource-table";
+import {
+  ColumnPanel,
+  ResourceTable,
+  schemaColumn,
+  useSortedData,
+  useTableState,
+} from "../resource-table";
 
 const col = schemaColumn<StarshipView>();
 
@@ -41,7 +47,12 @@ const columns = [
 
 export default function StarshipsTable() {
   const starships = useSwapiResource(StarshipsResource);
-  const tableState = useTableState(columns, starships.data);
+  const tableState = useTableState(columns);
+  const sortedData = useSortedData(
+    starships.data,
+    columns,
+    tableState.sortEntries,
+  );
 
   return (
     <>
@@ -49,6 +60,7 @@ export default function StarshipsTable() {
       <ResourceTable
         resource={starships}
         tableState={tableState}
+        data={sortedData}
         getRowKey={(s) => s.url}
       />
     </>

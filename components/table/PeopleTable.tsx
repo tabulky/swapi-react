@@ -8,6 +8,7 @@ import {
   ColumnPanel,
   ResourceTable,
   schemaColumn,
+  useSortedData,
   useTableState,
 } from "../resource-table";
 
@@ -30,7 +31,12 @@ const columns = [
 
 export default function PeopleTable() {
   const people = useSwapiResource(PeopleResource);
-  const tableState = useTableState(columns, people.data);
+  const tableState = useTableState(columns);
+  const sortedData = useSortedData(
+    people.data,
+    columns,
+    tableState.sortEntries,
+  );
 
   return (
     <>
@@ -38,6 +44,7 @@ export default function PeopleTable() {
       <ResourceTable
         resource={people}
         tableState={tableState}
+        data={sortedData}
         getRowKey={(p) => p.url}
       />
     </>

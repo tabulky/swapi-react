@@ -1,12 +1,17 @@
 "use client";
 
-import { useRef } from "react";
+import type React from "react";
+import { useMemo, useState } from "react";
 import { GripVertical } from "lucide-react";
 
 import type { TableState } from "./useTableState";
 
 // ---------------------------------------------------------------------------
-// ColumnPanel
+// ColumnPanel – drag-reorder with insertion indicator
+//
+// Instead of reordering the DOM while dragging (which causes flickering
+// feedback loops with native DnD), pills stay in place and a colored bar
+// indicates where the dragged pill will land.
 // ---------------------------------------------------------------------------
 
 export default function ColumnPanel<T extends Record<string, unknown>>({
@@ -17,80 +22,134 @@ export default function ColumnPanel<T extends Record<string, unknown>>({
   const { allColumns, visibleColumns, toggleColumn, setColumnOrder } =
     tableState;
 
-  const dragId = useRef<string | null>(null);
+  const [dragSourceId, setDragSourceId] = useState<string | null>(null);
+  const [dragOverId, setDragOverId] = useState<string | null>(null);
 
-  // --- Drag handlers (visible pills only) ---
+  // Which side of the hovered pill should the indicator appear on?
+  const insertSide = useMemo<"before" | "after" | null>(() => {
+    if (!dragSourceId || !dragOverId || dragSourceId === dragOverId) {
+      return null;
+    }
+    const ids = allColumns.map((c) => c.column.id);
+    const srcIdx = ids.indexOf(dragSourceId);
+    const tgtIdx = ids.indexOf(dragOverId);
+    if (srcIdx === -1 || tgtIdx === -1) return null;
+    return srcIdx < tgtIdx ? "after" : "before";
+  }, [allColumns, dragSourceId, dragOverId]);
 
-  const onDragStart = (columnId: string) => {
-    dragId.current = columnId;
+  // --- Drag handlers ---
+
+  const onDragStart = (e: React.DragEvent, columnId: string) => {
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", columnId);
+    setDragSourceId(columnId);
   };
 
   const onDragEnd = () => {
-    dragId.current = null;
+    setDragSourceId(null);
+    setDragOverId(null);
   };
 
-  const onDragOver = (e: React.DragEvent) => {
+  // Use onDragOver (not onDragEnter) with a same-value bail-out so that
+  // high-frequency calls don't cause extra renders.
+  const handleDragOver = (e: React.DragEvent, columnId: string) => {
     e.preventDefault();
+    setDragOverId((prev) => (prev === columnId ? prev : columnId));
   };
 
-  const onDrop = (targetId: string) => {
-    const srcId = dragId.current;
-    dragId.current = null;
-    if (!srcId || srcId === targetId) return;
-
-    const ids = visibleColumns.map((c) => c.id);
-    const srcIdx = ids.indexOf(srcId);
-    const tgtIdx = ids.indexOf(targetId);
-    if (srcIdx === -1 || tgtIdx === -1) return;
-
-    // Move src to tgt position
-    ids.splice(srcIdx, 1);
-    ids.splice(tgtIdx, 0, srcId);
-    setColumnOrder(ids);
+  const onDrop = () => {
+    if (dragSourceId && dragOverId && dragSourceId !== dragOverId) {
+      const ids = allColumns.map((c) => c.column.id);
+      const srcIdx = ids.indexOf(dragSourceId);
+      const tgtIdx = ids.indexOf(dragOverId);
+      if (srcIdx !== -1 && tgtIdx !== -1) {
+        ids.splice(srcIdx, 1);
+        ids.splice(tgtIdx, 0, dragSourceId);
+        setColumnOrder(ids);
+      }
+    }
+    setDragSourceId(null);
+    setDragOverId(null);
   };
 
   const isLastVisible = visibleColumns.length <= 1;
+  const isDragging = dragSourceId !== null;
 
   return (
     <div className="flex flex-wrap items-center gap-1.5 px-2 py-1.5">
-      {allColumns.map(({ column, visible }) =>
-        visible ? (
-          <button
-            key={column.id}
-            type="button"
-            aria-label={`Hide ${column.header} column`}
-            draggable={!isLastVisible}
-            disabled={isLastVisible}
-            onDragStart={() => onDragStart(column.id)}
-            onDragEnd={onDragEnd}
-            onDragOver={onDragOver}
-            onDrop={() => onDrop(column.id)}
-            onClick={() => toggleColumn(column.id)}
-            className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-xs font-medium
-              select-none transition-colors ${
+      {allColumns.map(({ column, visible }) => {
+        const isSource = column.id === dragSourceId;
+        const isOver = column.id === dragOverId && isDragging && !isSource;
+        const showBefore = isOver && insertSide === "before";
+        const showAfter = isOver && insertSide === "after";
+
+        // Box-shadow indicator — doesn't affect layout, no reflow
+        const indicatorStyle: React.CSSProperties | undefined = showBefore
+          ? { boxShadow: "-4px 0 0 -1px #3b82f6" }
+          : showAfter
+          ? { boxShadow: "4px 0 0 -1px #3b82f6" }
+          : undefined;
+
+        return visible
+          ? (
+            <button
+              key={column.id}
+              type="button"
+              aria-label={`Hide ${column.header} column`}
+              draggable={!isLastVisible}
+              disabled={isLastVisible}
+              onDragStart={(e) => onDragStart(e, column.id)}
+              onDragEnd={onDragEnd}
+              onDragOver={(e) => handleDragOver(e, column.id)}
+              onDrop={onDrop}
+              onClick={() => !isDragging && toggleColumn(column.id)}
+              style={indicatorStyle}
+              className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-xs font-medium
+              select-none transition-shadow duration-150 ${
                 isLastVisible
                   ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 cursor-not-allowed"
+                  : isSource
+                  ? "bg-foreground/10 opacity-30 cursor-grabbing"
                   : "bg-foreground/10 hover:bg-foreground/20 cursor-grab active:cursor-grabbing"
               }`}
-          >
-            <GripVertical size={12} className="opacity-40" aria-hidden />
-            {column.header}
-          </button>
-        ) : (
-          <button
-            key={column.id}
-            type="button"
-            aria-label={`Show ${column.header} column`}
-            onClick={() => toggleColumn(column.id)}
-            className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-xs font-medium
-              border border-dashed border-foreground/20 opacity-50
-              hover:opacity-80 hover:bg-foreground/5
-              select-none transition-colors cursor-pointer"
-          >
-            + {column.header}
-          </button>
-        ),
-      )}
+            >
+              <GripVertical
+                size={12}
+                className="opacity-40 pointer-events-none"
+                aria-hidden
+              />
+              <span className="pointer-events-none">{column.header}</span>
+            </button>
+          )
+          : (
+            <button
+              key={column.id}
+              type="button"
+              aria-label={`Show ${column.header} column`}
+              draggable
+              onDragStart={(e) => onDragStart(e, column.id)}
+              onDragEnd={onDragEnd}
+              onDragOver={(e) => handleDragOver(e, column.id)}
+              onDrop={onDrop}
+              onClick={() => !isDragging && toggleColumn(column.id)}
+              style={indicatorStyle}
+              className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-xs font-medium
+              border border-dashed border-foreground/20
+              select-none transition-shadow duration-150 cursor-pointer ${
+                isSource
+                  ? "opacity-20"
+                  : "opacity-50 hover:opacity-80 hover:bg-foreground/5"
+              }`}
+            >
+              <GripVertical
+                size={12}
+                className="opacity-40 pointer-events-none"
+                aria-hidden
+              />
+              <span className="pointer-events-none">{column.header}</span>
+            </button>
+          );
+      })}
     </div>
   );
 }

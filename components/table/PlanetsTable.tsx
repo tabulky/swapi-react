@@ -4,7 +4,13 @@ import type { PlanetView } from "@/types/planetView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import { PlanetsResource } from "@/lib/swapi/resources";
 
-import { ColumnPanel, ResourceTable, schemaColumn, useTableState } from "../resource-table";
+import {
+  ColumnPanel,
+  ResourceTable,
+  schemaColumn,
+  useSortedData,
+  useTableState,
+} from "../resource-table";
 
 import { ResidentsCell } from "./cells/ResidentsCell";
 
@@ -41,7 +47,12 @@ const columns = [
 
 export default function PlanetsTable() {
   const planets = useSwapiResource(PlanetsResource);
-  const tableState = useTableState(columns, planets.data);
+  const tableState = useTableState(columns);
+  const sortedData = useSortedData(
+    planets.data,
+    columns,
+    tableState.sortEntries,
+  );
 
   return (
     <>
@@ -49,6 +60,7 @@ export default function PlanetsTable() {
       <ResourceTable
         resource={planets}
         tableState={tableState}
+        data={sortedData}
         getRowKey={(p) => p.url}
       />
     </>

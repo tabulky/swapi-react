@@ -1,5 +1,6 @@
 "use client";
 
+import type React from "react";
 import { useMemo, useState } from "react";
 import { GripVertical } from "lucide-react";
 
@@ -40,6 +41,7 @@ export default function ColumnPanel<T extends Record<string, unknown>>({
 
   const onDragStart = (e: React.DragEvent, columnId: string) => {
     e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", columnId);
     setDragSourceId(columnId);
   };
 

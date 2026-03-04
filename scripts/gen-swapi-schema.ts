@@ -1,7 +1,7 @@
 /**
  * This script fetches JSON schemas for all SWAPI entities and generates Valibot schemas in TypeScript.
  * It uses the `json-schema-to-valibot` package to convert JSON schemas to Valibot code.
- * The generated files are saved in `src/lib/swapiSchema/` directory.
+ * The generated files are saved in `lib/swapi/schema/swapi-schema/` directory.
  *
  * To run this script, use the command: `pnpm gen:swapi`
  */
@@ -17,7 +17,7 @@ import { toSingularForm } from "./lib/singularForm.ts";
 import { toPascalCase } from "./lib/toPascalCase.ts";
 import { fetchJSON } from "./lib/fetchJSON.ts";
 
-import { SWAPI_BASE_URL } from "./config.ts";
+import { SWAPI_BASE_URL, SWAPI_SCHEMA_DIR } from "./config.ts";
 
 const processEntity = async (entity: string, url: string) => {
   const singularEntity = toSingularForm(entity);
@@ -52,14 +52,10 @@ const processEntity = async (entity: string, url: string) => {
     `export type ${typeName} = v.InferOutput<typeof ${schemaName}>;`,
   ].join("\n");
 
-  // TODO: move to config.ts
-  const absolutePath = new URL(
-    `../types/swapi-schema/${schemaName}.ts`,
-    import.meta.url,
-  ).pathname;
+  const fileUrl = new URL(`${schemaName}.ts`, SWAPI_SCHEMA_DIR);
 
   await writeFile(
-    absolutePath,
+    fileUrl,
     await format(moduleCode, { parser: "typescript" }),
   );
 };

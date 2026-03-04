@@ -1,6 +1,6 @@
 "use client";
 
-import type { PlanetView } from "@/types/planetView";
+import type { PlanetView } from "@/lib/swapi/schema/planetView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import { PlanetsResource } from "@/lib/swapi/resources";
 

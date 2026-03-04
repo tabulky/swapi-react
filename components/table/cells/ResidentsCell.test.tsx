@@ -3,7 +3,7 @@ import { renderToString } from "react-dom/server";
 import { vi } from "vitest";
 
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
-import { PersonView } from "@/types/personView";
+import { PersonView } from "@/lib/swapi/schema/personView";
 
 import { ResidentsCell } from "./ResidentsCell";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import type { PersonView } from "@/types/personView";
+import type { PersonView } from "@/lib/swapi/schema/personView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import { PeopleResource } from "@/lib/swapi/resources";
 

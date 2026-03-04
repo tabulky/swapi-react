@@ -11,7 +11,7 @@ import { toSingularForm } from "./lib/singularForm.ts";
 // import { toPascalCase } from "./lib/toPascalCase.ts";
 import { fetchJSON } from "./lib/fetchJSON.ts";
 
-import { SWAPI_BASE_URL } from "./config.ts";
+import { SWAPI_BASE_URL, SWAPI_SAMPLE_DATA_DIR } from "./config.ts";
 
 const processEntity = async (entity: string, url: string) => {
   const singularEntity = toSingularForm(entity);
@@ -21,14 +21,10 @@ const processEntity = async (entity: string, url: string) => {
 
   const entities = await fetchJSON(url);
 
-  // TODO: move to config.ts
-  const absolutePath = new URL(
-    `../sample-data/swapi.info/${singularEntity}.json`,
-    import.meta.url,
-  ).pathname;
+  const fileUrl = new URL(`${singularEntity}.json`, SWAPI_SAMPLE_DATA_DIR);
 
   await writeFile(
-    absolutePath,
+    fileUrl,
     await format(JSON.stringify(entities, null, 2), { parser: "json" }),
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import type { VehicleView } from "@/types/vehicleView";
+import type { VehicleView } from "@/lib/swapi/schema/vehicleView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import { VehiclesResource } from "@/lib/swapi/resources";
 

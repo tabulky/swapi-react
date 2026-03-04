@@ -1,8 +1,8 @@
 import * as v from "valibot";
 
-import { planetViewSchema } from "@/types/planetView";
+import { planetViewSchema } from "./planetView";
 
-import planets from "@/sample-data/swapi.info/planet.json";
+import planets from "../sample-data/swapi.info/planet.json";
 
 describe("planetViewSchema", () => {
   it("parses all sample planets from planet.json without errors", () => {

@@ -1,14 +1,14 @@
 import * as v from "valibot";
 
-import { filmViewSchema } from "@/types/filmView";
+import { filmSchema } from "./swapi-schema/filmSchema";
 
-import films from "@/sample-data/swapi.info/film.json";
+import films from "../sample-data/swapi.info/film.json";
 
-describe("filmViewSchema", () => {
+describe("filmSchema", () => {
   it("parses all sample films from film.json without errors", () => {
     let errorCount = 0;
     for (const film of films) {
-      const result = v.safeParse(filmViewSchema, film);
+      const result = v.safeParse(filmSchema, film);
       if (!result.success) {
         errorCount++;
       }

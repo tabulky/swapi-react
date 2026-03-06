@@ -1,6 +1,7 @@
 "use client";
 
-import { Tag } from "@/components/Tag";
+import { Tag } from "@/components/tag/Tag";
+import { PersonTag } from "@/components/tag/PersonTag";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import { PeopleResource } from "@/lib/swapi/resources";
 import { PersonView } from "@/lib/swapi/schema/personView";
@@ -42,8 +43,10 @@ export function ResidentsCell(
 
   return (
     <td className={className}>
-      {found.map((person) => <Tag key={person.url}>{person.name}</Tag>)}
-      {missing.length > 0 && <Tag className="opacity-40">{`+${missing.length}`}</Tag>}
+      {found.map((person) => <PersonTag key={person.url} person={person} />)}
+      {missing.length > 0 && (
+        <Tag className="opacity-40">{`+${missing.length}`}</Tag>
+      )}
     </td>
   );
 }

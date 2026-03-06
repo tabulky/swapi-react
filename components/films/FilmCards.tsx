@@ -4,8 +4,9 @@ import { useState } from "react";
 import type { FilmView } from "@/lib/swapi/schema/filmView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import { FilmsResource } from "@/lib/swapi/resources";
+
 import { TableLoadingState } from "../resource-table/TableLoadingState";
-import { Tag } from "../Tag";
+import { Tag } from "../tag/Tag";
 
 // ---------------------------------------------------------------------------
 // FilmCard — a single film panel

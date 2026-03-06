@@ -1,4 +1,4 @@
-import { Tag } from "@/components/Tag";
+import { Tag } from "@/components/tag/Tag";
 
 export type TagArrayCellProps = {
   readonly value: string[] | null | undefined;

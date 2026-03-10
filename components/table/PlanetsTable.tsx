@@ -2,7 +2,11 @@
 
 import type { PlanetView } from "@/lib/swapi/schema/planetView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
-import { PlanetsResource } from "@/lib/swapi/resources";
+import {
+  FilmsResource,
+  PeopleResource,
+  PlanetsResource,
+} from "@/lib/swapi/resources";
 
 import {
   ColumnPanel,
@@ -12,15 +16,21 @@ import {
   useTableState,
 } from "../resource-table";
 
-import { ResidentsCell } from "./cells/ResidentsCell";
+import { createNameCell } from "./cells/NameCell";
+import { createRelationCell } from "./cells/relationCells";
 
 const col = schemaColumn<PlanetView>();
+
+const NameCell = createNameCell("/planets");
+const ResidentsCell = createRelationCell(PeopleResource, "name", "/people");
+const FilmsCell = createRelationCell(FilmsResource, "title", "/films");
 
 const columns = [
   col("name", {
     type: "text",
     label: "Name",
     cellClassName: "p-2 font-medium",
+    CellComponent: NameCell,
   }),
   col("climate", { type: "tagArray", label: "Climate" }),
   col("terrain", { type: "tagArray", label: "Terrain" }),
@@ -43,6 +53,7 @@ const columns = [
     numericUnit: "%",
   }),
   col("residents", { label: "People", CellComponent: ResidentsCell }),
+  col("films", { label: "Films", CellComponent: FilmsCell }),
 ];
 
 export default function PlanetsTable() {

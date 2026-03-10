@@ -2,7 +2,11 @@
 
 import type { VehicleView } from "@/lib/swapi/schema/vehicleView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
-import { VehiclesResource } from "@/lib/swapi/resources";
+import {
+  FilmsResource,
+  PeopleResource,
+  VehiclesResource,
+} from "@/lib/swapi/resources";
 
 import {
   ColumnPanel,
@@ -12,13 +16,21 @@ import {
   useTableState,
 } from "../resource-table";
 
+import { createNameCell } from "./cells/NameCell";
+import { createRelationCell } from "./cells/relationCells";
+
 const col = schemaColumn<VehicleView>();
+
+const NameCell = createNameCell("/vehicles");
+const PilotsCell = createRelationCell(PeopleResource, "name", "/people");
+const FilmsCell = createRelationCell(FilmsResource, "title", "/films");
 
 const columns = [
   col("name", {
     type: "text",
     label: "Name",
     cellClassName: "p-2 font-medium",
+    CellComponent: NameCell,
   }),
   col("model", { type: "text", label: "Model" }),
   col("vehicle_class", { type: "text", label: "Class" }),
@@ -41,6 +53,8 @@ const columns = [
     numericUnit: " kg",
   }),
   col("consumables", { type: "text", label: "Consumables" }),
+  col("pilots", { label: "Pilots", CellComponent: PilotsCell }),
+  col("films", { label: "Films", CellComponent: FilmsCell }),
 ];
 
 export default function VehiclesTable() {

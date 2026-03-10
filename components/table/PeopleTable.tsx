@@ -2,7 +2,14 @@
 
 import type { PersonView } from "@/lib/swapi/schema/personView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
-import { PeopleResource } from "@/lib/swapi/resources";
+import {
+  FilmsResource,
+  PeopleResource,
+  PlanetsResource,
+  SpeciesResource,
+  StarshipsResource,
+  VehiclesResource,
+} from "@/lib/swapi/resources";
 
 import {
   ColumnPanel,
@@ -12,13 +19,27 @@ import {
   useTableState,
 } from "../resource-table";
 
+import { createNameCell } from "./cells/NameCell";
+import {
+  createRelationCell,
+  createSingleRelationCell,
+} from "./cells/relationCells";
+
 const col = schemaColumn<PersonView>();
+
+const NameCell = createNameCell("/people");
+const HomeworldCell = createSingleRelationCell(PlanetsResource, "name", "/planets");
+const FilmsCell = createRelationCell(FilmsResource, "title", "/films");
+const SpeciesCell = createRelationCell(SpeciesResource, "name", "/species");
+const VehiclesCell = createRelationCell(VehiclesResource, "name", "/vehicles");
+const StarshipsCell = createRelationCell(StarshipsResource, "name", "/starships");
 
 const columns = [
   col("name", {
     type: "text",
     label: "Name",
     cellClassName: "p-2 font-medium",
+    CellComponent: NameCell,
   }),
   col("gender", { type: "text", label: "Gender" }),
   col("birth_year", { type: "text", label: "Birth Year" }),
@@ -27,6 +48,11 @@ const columns = [
   col("hair_color", { type: "tagArray", label: "Hair Color" }),
   col("eye_color", { type: "tagArray", label: "Eye Color" }),
   col("skin_color", { type: "tagArray", label: "Skin Color" }),
+  col("homeworld", { label: "Homeworld", CellComponent: HomeworldCell }),
+  col("films", { label: "Films", CellComponent: FilmsCell }),
+  col("species", { label: "Species", CellComponent: SpeciesCell }),
+  col("vehicles", { label: "Vehicles", CellComponent: VehiclesCell }),
+  col("starships", { label: "Starships", CellComponent: StarshipsCell }),
 ];
 
 export default function PeopleTable() {

@@ -2,7 +2,11 @@
 
 import type { StarshipView } from "@/lib/swapi/schema/starshipView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
-import { StarshipsResource } from "@/lib/swapi/resources";
+import {
+  FilmsResource,
+  PeopleResource,
+  StarshipsResource,
+} from "@/lib/swapi/resources";
 
 import {
   ColumnPanel,
@@ -12,13 +16,21 @@ import {
   useTableState,
 } from "../resource-table";
 
+import { createNameCell } from "./cells/NameCell";
+import { createRelationCell } from "./cells/relationCells";
+
 const col = schemaColumn<StarshipView>();
+
+const NameCell = createNameCell("/starships");
+const PilotsCell = createRelationCell(PeopleResource, "name", "/people");
+const FilmsCell = createRelationCell(FilmsResource, "title", "/films");
 
 const columns = [
   col("name", {
     type: "text",
     label: "Name",
     cellClassName: "p-2 font-medium",
+    CellComponent: NameCell,
   }),
   col("model", { type: "text", label: "Model" }),
   col("starship_class", { type: "text", label: "Class" }),
@@ -43,6 +55,8 @@ const columns = [
   col("hyperdrive_rating", { type: "numeric", label: "Hyperdrive Rating" }),
   col("MGLT", { type: "numeric", label: "MGLT" }),
   col("consumables", { type: "text", label: "Consumables" }),
+  col("pilots", { label: "Pilots", CellComponent: PilotsCell }),
+  col("films", { label: "Films", CellComponent: FilmsCell }),
 ];
 
 export default function StarshipsTable() {

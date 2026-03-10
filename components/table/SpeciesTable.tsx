@@ -2,7 +2,12 @@
 
 import type { SpeciesView } from "@/lib/swapi/schema/speciesView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
-import { SpeciesResource } from "@/lib/swapi/resources";
+import {
+  FilmsResource,
+  PeopleResource,
+  PlanetsResource,
+  SpeciesResource,
+} from "@/lib/swapi/resources";
 
 import {
   ColumnPanel,
@@ -12,13 +17,25 @@ import {
   useTableState,
 } from "../resource-table";
 
+import { createNameCell } from "./cells/NameCell";
+import {
+  createRelationCell,
+  createSingleRelationCell,
+} from "./cells/relationCells";
+
 const col = schemaColumn<SpeciesView>();
+
+const NameCell = createNameCell("/species");
+const HomeworldCell = createSingleRelationCell(PlanetsResource, "name", "/planets");
+const PeopleCell = createRelationCell(PeopleResource, "name", "/people");
+const FilmsCell = createRelationCell(FilmsResource, "title", "/films");
 
 const columns = [
   col("name", {
     type: "text",
     label: "Name",
     cellClassName: "p-2 font-medium",
+    CellComponent: NameCell,
   }),
   col("classification", { type: "text", label: "Classification" }),
   col("designation", { type: "text", label: "Designation" }),
@@ -36,6 +53,9 @@ const columns = [
   col("skin_colors", { type: "tagArray", label: "Skin Colors" }),
   col("hair_colors", { type: "tagArray", label: "Hair Colors" }),
   col("eye_colors", { type: "tagArray", label: "Eye Colors" }),
+  col("homeworld", { label: "Homeworld", CellComponent: HomeworldCell }),
+  col("people", { label: "People", CellComponent: PeopleCell }),
+  col("films", { label: "Films", CellComponent: FilmsCell }),
 ];
 
 export default function SpeciesTable() {

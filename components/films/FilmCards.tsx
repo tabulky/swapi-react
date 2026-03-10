@@ -3,8 +3,16 @@
 import { useState } from "react";
 import type { FilmView } from "@/lib/swapi/schema/filmView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
-import { FilmsResource } from "@/lib/swapi/resources";
+import {
+  FilmsResource,
+  PeopleResource,
+  PlanetsResource,
+  SpeciesResource,
+  StarshipsResource,
+  VehiclesResource,
+} from "@/lib/swapi/resources";
 
+import { RelationDetails } from "../detail/RelationDetails";
 import { TableLoadingState } from "../resource-table/TableLoadingState";
 import { Tag } from "../tag/Tag";
 
@@ -67,18 +75,13 @@ function FilmCard({ film }: { film: FilmView }) {
         )}
       </div>
 
-      {/* Related Resource Counts */}
-      <div>
-        <h3 className="text-sm font-medium text-foreground/60 mb-1">
-          Related
-        </h3>
-        <div className="flex flex-wrap gap-2 text-sm">
-          <Tag>{film.characters.length} Characters</Tag>
-          <Tag>{film.planets.length} Planets</Tag>
-          <Tag>{film.starships.length} Starships</Tag>
-          <Tag>{film.vehicles.length} Vehicles</Tag>
-          <Tag>{film.species.length} Species</Tag>
-        </div>
+      {/* Related Resources */}
+      <div className="flex flex-col gap-1.5">
+        <RelationDetails label="Characters" urls={film.characters} resource={PeopleResource} labelKey="name" routePrefix="/people" />
+        <RelationDetails label="Planets" urls={film.planets} resource={PlanetsResource} labelKey="name" routePrefix="/planets" />
+        <RelationDetails label="Starships" urls={film.starships} resource={StarshipsResource} labelKey="name" routePrefix="/starships" />
+        <RelationDetails label="Vehicles" urls={film.vehicles} resource={VehiclesResource} labelKey="name" routePrefix="/vehicles" />
+        <RelationDetails label="Species" urls={film.species} resource={SpeciesResource} labelKey="name" routePrefix="/species" />
       </div>
     </article>
   );

@@ -7,7 +7,7 @@ import {
   DetailField,
   TagArrayValue,
 } from "@/components/detail/DetailField";
-import { RelationLinks } from "@/components/detail/RelationLinks";
+import { RelationDetails } from "@/components/detail/RelationDetails";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
 import {
   FilmDetailResource,
@@ -60,47 +60,45 @@ export default function FilmDetailPage() {
             {film.opening_crawl.replace(/\r\n/g, "\n")}
           </p>
         </DetailField>
-        <DetailField label="Characters">
-          <RelationLinks
-            urls={film.characters}
-            resource={PeopleResource}
-            labelKey="name"
-            routePrefix="/people"
-          />
-        </DetailField>
-        <DetailField label="Planets">
-          <RelationLinks
-            urls={film.planets}
-            resource={PlanetsResource}
-            labelKey="name"
-            routePrefix="/planets"
-          />
-        </DetailField>
-        <DetailField label="Starships">
-          <RelationLinks
-            urls={film.starships}
-            resource={StarshipsResource}
-            labelKey="name"
-            routePrefix="/starships"
-          />
-        </DetailField>
-        <DetailField label="Vehicles">
-          <RelationLinks
-            urls={film.vehicles}
-            resource={VehiclesResource}
-            labelKey="name"
-            routePrefix="/vehicles"
-          />
-        </DetailField>
-        <DetailField label="Species">
-          <RelationLinks
-            urls={film.species}
-            resource={SpeciesResource}
-            labelKey="name"
-            routePrefix="/species"
-          />
-        </DetailField>
       </dl>
+
+      <div className="mt-6 flex flex-col gap-2">
+        <RelationDetails
+          label="Characters"
+          urls={film.characters}
+          resource={PeopleResource}
+          labelKey="name"
+          routePrefix="/people"
+        />
+        <RelationDetails
+          label="Planets"
+          urls={film.planets}
+          resource={PlanetsResource}
+          labelKey="name"
+          routePrefix="/planets"
+        />
+        <RelationDetails
+          label="Starships"
+          urls={film.starships}
+          resource={StarshipsResource}
+          labelKey="name"
+          routePrefix="/starships"
+        />
+        <RelationDetails
+          label="Vehicles"
+          urls={film.vehicles}
+          resource={VehiclesResource}
+          labelKey="name"
+          routePrefix="/vehicles"
+        />
+        <RelationDetails
+          label="Species"
+          urls={film.species}
+          resource={SpeciesResource}
+          labelKey="name"
+          routePrefix="/species"
+        />
+      </div>
     </main>
   );
 }

@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { Tag } from "@/components/tag/Tag";
 
 // ---------------------------------------------------------------------------
@@ -9,7 +11,7 @@ export function DetailField({
   children,
 }: {
   label: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <>

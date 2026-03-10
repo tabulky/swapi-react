@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { FilmView } from "@/lib/swapi/schema/filmView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
+import { extractIdFromUrl } from "@/lib/swapi/urlUtils";
 import {
   FilmsResource,
   PeopleResource,
@@ -36,7 +38,14 @@ function FilmCard({ film }: { film: FilmView }) {
         <p className="text-sm font-medium text-foreground/50">
           Episode {film.episode_id}
         </p>
-        <h2 className="text-xl font-bold">{film.title}</h2>
+        <h2 className="text-xl font-bold">
+          <Link
+            href={`/films/${extractIdFromUrl(film.url)}`}
+            className="hover:underline text-blue-600 dark:text-blue-400"
+          >
+            {film.title}
+          </Link>
+        </h2>
       </header>
 
       {/* Metadata */}
@@ -76,7 +85,7 @@ function FilmCard({ film }: { film: FilmView }) {
       </div>
 
       {/* Related Resources */}
-      <div className="flex flex-col gap-1.5">
+      <div className="mt-auto flex flex-col gap-1.5">
         <RelationDetails label="Characters" urls={film.characters} resource={PeopleResource} labelKey="name" routePrefix="/people" />
         <RelationDetails label="Planets" urls={film.planets} resource={PlanetsResource} labelKey="name" routePrefix="/planets" />
         <RelationDetails label="Starships" urls={film.starships} resource={StarshipsResource} labelKey="name" routePrefix="/starships" />

@@ -2,14 +2,7 @@
 
 import type { PersonView } from "@/lib/swapi/schema/personView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
-import {
-  FilmsResource,
-  PeopleResource,
-  PlanetsResource,
-  SpeciesResource,
-  StarshipsResource,
-  VehiclesResource,
-} from "@/lib/swapi/resources";
+import { PeopleResource } from "@/lib/swapi/resources";
 
 import {
   ColumnPanel,
@@ -20,36 +13,21 @@ import {
 } from "../resource-table";
 
 import { createNameCell } from "./cells/createNameCell";
-import { createRelationTagsCell } from "./cells/createRelationTagsCell";
-import { createRelationLinkCell } from "./cells/createRelationLinkCell";
+import {
+  FilmTagsCell,
+  PlanetLinkCell,
+  SpeciesTagsCell,
+  StarshipTagsCell,
+  VehicleTagsCell,
+} from "./cells/relationCells";
 
 const col = schemaColumn<PersonView>();
-
-const NameCell = createNameCell("/people");
-const HomeworldCell = createRelationLinkCell(
-  PlanetsResource,
-  "name",
-  "/planets",
-);
-const FilmsCell = createRelationTagsCell(FilmsResource, "title", "/films");
-const SpeciesCell = createRelationTagsCell(SpeciesResource, "name", "/species");
-const VehiclesCell = createRelationTagsCell(
-  VehiclesResource,
-  "name",
-  "/vehicles",
-);
-const StarshipsCell = createRelationTagsCell(
-  StarshipsResource,
-  "name",
-  "/starships",
-);
 
 const columns = [
   col("name", {
     type: "text",
     label: "Name",
-    cellClassName: "p-2 font-light",
-    CellComponent: NameCell,
+    CellComponent: createNameCell("/people"),
   }),
   col("gender", { type: "text", label: "Gender" }),
   col("birth_year", { type: "text", label: "Birth Year" }),
@@ -58,11 +36,11 @@ const columns = [
   col("hair_color", { type: "tagArray", label: "Hair Color" }),
   col("eye_color", { type: "tagArray", label: "Eye Color" }),
   col("skin_color", { type: "tagArray", label: "Skin Color" }),
-  col("homeworld", { label: "Homeworld", CellComponent: HomeworldCell }),
-  col("films", { label: "Films", CellComponent: FilmsCell }),
-  col("species", { label: "Species", CellComponent: SpeciesCell }),
-  col("vehicles", { label: "Vehicles", CellComponent: VehiclesCell }),
-  col("starships", { label: "Starships", CellComponent: StarshipsCell }),
+  col("homeworld", { label: "Homeworld", CellComponent: PlanetLinkCell }),
+  col("films", { label: "Films", CellComponent: FilmTagsCell }),
+  col("species", { label: "Species", CellComponent: SpeciesTagsCell }),
+  col("vehicles", { label: "Vehicles", CellComponent: VehicleTagsCell }),
+  col("starships", { label: "Starships", CellComponent: StarshipTagsCell }),
 ];
 
 export default function PeopleTable() {

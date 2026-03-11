@@ -2,12 +2,7 @@
 
 import type { SpeciesView } from "@/lib/swapi/schema/speciesView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
-import {
-  FilmsResource,
-  PeopleResource,
-  PlanetsResource,
-  SpeciesResource,
-} from "@/lib/swapi/resources";
+import { SpeciesResource } from "@/lib/swapi/resources";
 
 import {
   ColumnPanel,
@@ -18,26 +13,18 @@ import {
 } from "../resource-table";
 
 import { createNameCell } from "./cells/createNameCell";
-import { createRelationTagsCell } from "./cells/createRelationTagsCell";
-import { createRelationLinkCell } from "./cells/createRelationLinkCell";
+import {
+  FilmTagsCell,
+  PeopleTagsCell,
+  PlanetLinkCell,
+} from "./cells/relationCells";
 
 const col = schemaColumn<SpeciesView>();
-
-const NameCell = createNameCell("/species");
-const HomeworldCell = createRelationLinkCell(
-  PlanetsResource,
-  "name",
-  "/planets",
-);
-const PeopleCell = createRelationTagsCell(PeopleResource, "name", "/people");
-const FilmsCell = createRelationTagsCell(FilmsResource, "title", "/films");
-
 const columns = [
   col("name", {
     type: "text",
     label: "Name",
-    cellClassName: "p-2 font-medium",
-    CellComponent: NameCell,
+    CellComponent: createNameCell("/species"),
   }),
   col("classification", { type: "text", label: "Classification" }),
   col("designation", { type: "text", label: "Designation" }),
@@ -55,9 +42,9 @@ const columns = [
   col("skin_colors", { type: "tagArray", label: "Skin Colors" }),
   col("hair_colors", { type: "tagArray", label: "Hair Colors" }),
   col("eye_colors", { type: "tagArray", label: "Eye Colors" }),
-  col("homeworld", { label: "Homeworld", CellComponent: HomeworldCell }),
-  col("people", { label: "People", CellComponent: PeopleCell }),
-  col("films", { label: "Films", CellComponent: FilmsCell }),
+  col("homeworld", { label: "Homeworld", CellComponent: PlanetLinkCell }),
+  col("people", { label: "People", CellComponent: PeopleTagsCell }),
+  col("films", { label: "Films", CellComponent: FilmTagsCell }),
 ];
 
 export default function SpeciesTable() {

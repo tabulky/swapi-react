@@ -2,11 +2,7 @@
 
 import type { StarshipView } from "@/lib/swapi/schema/starshipView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
-import {
-  FilmsResource,
-  PeopleResource,
-  StarshipsResource,
-} from "@/lib/swapi/resources";
+import { StarshipsResource } from "@/lib/swapi/resources";
 
 import {
   ColumnPanel,
@@ -17,20 +13,15 @@ import {
 } from "../resource-table";
 
 import { createNameCell } from "./cells/createNameCell";
-import { createRelationTagsCell } from "./cells/createRelationTagsCell";
+import { FilmTagsCell, PeopleTagsCell } from "./cells/relationCells";
 
 const col = schemaColumn<StarshipView>();
-
-const NameCell = createNameCell("/starships");
-const PilotsCell = createRelationTagsCell(PeopleResource, "name", "/people");
-const FilmsCell = createRelationTagsCell(FilmsResource, "title", "/films");
 
 const columns = [
   col("name", {
     type: "text",
     label: "Name",
-    cellClassName: "p-2 font-medium",
-    CellComponent: NameCell,
+    CellComponent: createNameCell("/starships"),
   }),
   col("model", { type: "text", label: "Model" }),
   col("starship_class", { type: "text", label: "Class" }),
@@ -55,8 +46,8 @@ const columns = [
   col("hyperdrive_rating", { type: "numeric", label: "Hyperdrive Rating" }),
   col("MGLT", { type: "numeric", label: "MGLT" }),
   col("consumables", { type: "text", label: "Consumables" }),
-  col("pilots", { label: "Pilots", CellComponent: PilotsCell }),
-  col("films", { label: "Films", CellComponent: FilmsCell }),
+  col("pilots", { label: "Pilots", CellComponent: PeopleTagsCell }),
+  col("films", { label: "Films", CellComponent: FilmTagsCell }),
 ];
 
 export default function StarshipsTable() {

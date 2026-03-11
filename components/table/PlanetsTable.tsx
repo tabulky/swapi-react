@@ -2,11 +2,7 @@
 
 import type { PlanetView } from "@/lib/swapi/schema/planetView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
-import {
-  FilmsResource,
-  PeopleResource,
-  PlanetsResource,
-} from "@/lib/swapi/resources";
+import { PlanetsResource } from "@/lib/swapi/resources";
 
 import {
   ColumnPanel,
@@ -17,20 +13,15 @@ import {
 } from "../resource-table";
 
 import { createNameCell } from "./cells/createNameCell";
-import { createRelationTagsCell } from "./cells/createRelationTagsCell";
+import { FilmTagsCell, PeopleTagsCell } from "./cells/relationCells";
 
 const col = schemaColumn<PlanetView>();
-
-const NameCell = createNameCell("/planets");
-const ResidentsCell = createRelationTagsCell(PeopleResource, "name", "/people");
-const FilmsCell = createRelationTagsCell(FilmsResource, "title", "/films");
 
 const columns = [
   col("name", {
     type: "text",
     label: "Name",
-    cellClassName: "p-2 font-medium",
-    CellComponent: NameCell,
+    CellComponent: createNameCell("/planets"),
   }),
   col("climate", { type: "tagArray", label: "Climate" }),
   col("terrain", { type: "tagArray", label: "Terrain" }),
@@ -52,8 +43,8 @@ const columns = [
     label: "Surface Water",
     numericUnit: "%",
   }),
-  col("residents", { label: "Residents", CellComponent: ResidentsCell }),
-  col("films", { label: "Films", CellComponent: FilmsCell }),
+  col("residents", { label: "Residents", CellComponent: PeopleTagsCell }),
+  col("films", { label: "Films", CellComponent: FilmTagsCell }),
 ];
 
 export default function PlanetsTable() {

@@ -19,26 +19,36 @@ import {
   useTableState,
 } from "../resource-table";
 
-import { createNameCell } from "./cells/NameCell";
-import {
-  createRelationCell,
-  createSingleRelationCell,
-} from "./cells/relationCells";
+import { createNameCell } from "./cells/createNameCell";
+import { createRelationTagsCell } from "./cells/createRelationTagsCell";
+import { createRelationLinkCell } from "./cells/createRelationLinkCell";
 
 const col = schemaColumn<PersonView>();
 
 const NameCell = createNameCell("/people");
-const HomeworldCell = createSingleRelationCell(PlanetsResource, "name", "/planets");
-const FilmsCell = createRelationCell(FilmsResource, "title", "/films");
-const SpeciesCell = createRelationCell(SpeciesResource, "name", "/species");
-const VehiclesCell = createRelationCell(VehiclesResource, "name", "/vehicles");
-const StarshipsCell = createRelationCell(StarshipsResource, "name", "/starships");
+const HomeworldCell = createRelationLinkCell(
+  PlanetsResource,
+  "name",
+  "/planets",
+);
+const FilmsCell = createRelationTagsCell(FilmsResource, "title", "/films");
+const SpeciesCell = createRelationTagsCell(SpeciesResource, "name", "/species");
+const VehiclesCell = createRelationTagsCell(
+  VehiclesResource,
+  "name",
+  "/vehicles",
+);
+const StarshipsCell = createRelationTagsCell(
+  StarshipsResource,
+  "name",
+  "/starships",
+);
 
 const columns = [
   col("name", {
     type: "text",
     label: "Name",
-    cellClassName: "p-2 font-medium",
+    cellClassName: "p-2 font-light",
     CellComponent: NameCell,
   }),
   col("gender", { type: "text", label: "Gender" }),

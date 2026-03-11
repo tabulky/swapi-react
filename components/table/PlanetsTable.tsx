@@ -16,14 +16,14 @@ import {
   useTableState,
 } from "../resource-table";
 
-import { createNameCell } from "./cells/NameCell";
-import { createRelationCell } from "./cells/relationCells";
+import { createNameCell } from "./cells/createNameCell";
+import { createRelationTagsCell } from "./cells/createRelationTagsCell";
 
 const col = schemaColumn<PlanetView>();
 
 const NameCell = createNameCell("/planets");
-const ResidentsCell = createRelationCell(PeopleResource, "name", "/people");
-const FilmsCell = createRelationCell(FilmsResource, "title", "/films");
+const ResidentsCell = createRelationTagsCell(PeopleResource, "name", "/people");
+const FilmsCell = createRelationTagsCell(FilmsResource, "title", "/films");
 
 const columns = [
   col("name", {

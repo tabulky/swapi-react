@@ -17,18 +17,20 @@ import {
   useTableState,
 } from "../resource-table";
 
-import { createNameCell } from "./cells/NameCell";
-import {
-  createRelationCell,
-  createSingleRelationCell,
-} from "./cells/relationCells";
+import { createNameCell } from "./cells/createNameCell";
+import { createRelationTagsCell } from "./cells/createRelationTagsCell";
+import { createRelationLinkCell } from "./cells/createRelationLinkCell";
 
 const col = schemaColumn<SpeciesView>();
 
 const NameCell = createNameCell("/species");
-const HomeworldCell = createSingleRelationCell(PlanetsResource, "name", "/planets");
-const PeopleCell = createRelationCell(PeopleResource, "name", "/people");
-const FilmsCell = createRelationCell(FilmsResource, "title", "/films");
+const HomeworldCell = createRelationLinkCell(
+  PlanetsResource,
+  "name",
+  "/planets",
+);
+const PeopleCell = createRelationTagsCell(PeopleResource, "name", "/people");
+const FilmsCell = createRelationTagsCell(FilmsResource, "title", "/films");
 
 const columns = [
   col("name", {

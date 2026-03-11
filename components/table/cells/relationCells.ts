@@ -1,3 +1,5 @@
+"use client";
+
 import { createRelationLinkCell } from "./createRelationLinkCell";
 import { createRelationTagsCell } from "./createRelationTagsCell";
 import {

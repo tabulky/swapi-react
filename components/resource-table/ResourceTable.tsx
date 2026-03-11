@@ -25,7 +25,7 @@ function SortIndicator({
     return (
       <ChevronsUpDown
         size={14}
-        className="inline-block ml-1 opacity-0 group-hover:opacity-40 transition-opacity"
+        className="inline-block ml-1 opacity-40 group-hover:opacity-80 transition-opacity"
       />
     );
   }
@@ -92,7 +92,7 @@ export default function ResourceTable<T extends Record<string, unknown>>({
                 <th
                   key={col.id}
                   scope="col"
-                  className={`p-2 ${
+                  className={`p-2 align-top ${
                     col.isSortable ? "cursor-pointer select-none group" : ""
                   } ${col.headerClassName ?? ""}`}
                   onClick={col.isSortable

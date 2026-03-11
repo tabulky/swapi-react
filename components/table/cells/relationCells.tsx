@@ -46,7 +46,11 @@ export function createRelationCell<T extends Record<string, unknown>>(
         );
         if (item) {
           const id = extractIdFromUrl(url);
-          return { url, label: String(item[labelKey]), href: `${routePrefix}/${id}` };
+          return {
+            url,
+            label: String(item[labelKey]),
+            href: `${routePrefix}/${id}`,
+          };
         }
         return { url, label: null, href: null };
       });
@@ -64,17 +68,19 @@ export function createRelationCell<T extends Record<string, unknown>>(
       <td className={className}>
         <span className="flex flex-wrap gap-0.5">
           {items.map((item) =>
-            item.href ? (
-              <Link key={item.url} href={item.href}>
-                <Tag className="hover:bg-blue-200 dark:hover:bg-blue-800 cursor-pointer">
-                  {item.label}
+            item.href
+              ? (
+                <Link key={item.url} href={item.href}>
+                  <Tag className="hover:underline text-blue-600 dark:text-blue-400 cursor-pointer">
+                    {item.label}
+                  </Tag>
+                </Link>
+              )
+              : (
+                <Tag key={item.url} className="opacity-40">
+                  ?
                 </Tag>
-              </Link>
-            ) : (
-              <Tag key={item.url} className="opacity-40">
-                ?
-              </Tag>
-            ),
+              )
           )}
         </span>
       </td>

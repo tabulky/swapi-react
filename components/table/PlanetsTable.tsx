@@ -52,7 +52,7 @@ const columns = [
     label: "Surface Water",
     numericUnit: "%",
   }),
-  col("residents", { label: "People", CellComponent: ResidentsCell }),
+  col("residents", { label: "Residents", CellComponent: ResidentsCell }),
   col("films", { label: "Films", CellComponent: FilmsCell }),
 ];
 

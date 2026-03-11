@@ -2,11 +2,7 @@
 
 import type { VehicleView } from "@/lib/swapi/schema/vehicleView";
 import { useSwapiResource } from "@/lib/swapi/createSwapiStore";
-import {
-  FilmsResource,
-  PeopleResource,
-  VehiclesResource,
-} from "@/lib/swapi/resources";
+import { VehiclesResource } from "@/lib/swapi/resources";
 
 import {
   ColumnPanel,
@@ -17,20 +13,15 @@ import {
 } from "../resource-table";
 
 import { createNameCell } from "./cells/createNameCell";
-import { createRelationTagsCell } from "./cells/createRelationTagsCell";
+import { FilmTagsCell, PersonTagsCell } from "./cells/relationCells";
 
 const col = schemaColumn<VehicleView>();
-
-const NameCell = createNameCell("/vehicles");
-const PilotsCell = createRelationTagsCell(PeopleResource, "name", "/people");
-const FilmsCell = createRelationTagsCell(FilmsResource, "title", "/films");
 
 const columns = [
   col("name", {
     type: "text",
     label: "Name",
-    cellClassName: "p-2 font-medium",
-    CellComponent: NameCell,
+    CellComponent: createNameCell("/vehicles"),
   }),
   col("model", { type: "text", label: "Model" }),
   col("vehicle_class", { type: "text", label: "Class" }),
@@ -53,8 +44,8 @@ const columns = [
     numericUnit: " kg",
   }),
   col("consumables", { type: "text", label: "Consumables" }),
-  col("pilots", { label: "Pilots", CellComponent: PilotsCell }),
-  col("films", { label: "Films", CellComponent: FilmsCell }),
+  col("pilots", { label: "Pilots", CellComponent: PersonTagsCell }),
+  col("films", { label: "Films", CellComponent: FilmTagsCell }),
 ];
 
 export default function VehiclesTable() {

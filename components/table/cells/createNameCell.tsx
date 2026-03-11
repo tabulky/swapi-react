@@ -26,7 +26,7 @@ export function createNameCell(routePrefix: string) {
     const id = extractIdFromUrl(url);
 
     return (
-      <td className={className}>
+      <td className={`p-2 font-bold ${className ?? ""}`}>
         <Link
           href={`${routePrefix}/${id}`}
           className="hover:underline text-blue-600 dark:text-blue-400"

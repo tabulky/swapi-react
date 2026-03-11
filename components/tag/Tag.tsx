@@ -8,7 +8,7 @@ interface TagProps {
 export const Tag: React.FC<TagProps> = ({ children, className = "" }) => {
   return (
     <span
-      className={`inline-block px-2 mx-0.5 rounded-sm text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 ${className}`}
+      className={`inline-block px-1 m-0.5 rounded-sm text-sm font-medium bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 ${className}`}
     >
       {children}
     </span>

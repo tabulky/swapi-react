@@ -13,7 +13,7 @@ import {
 } from "../resource-table";
 
 import { createNameCell } from "./cells/createNameCell";
-import { FilmTagsCell, PersonTagsCell } from "./cells/relationCells";
+import { FilmTagsCell, PeopleTagsCell } from "./cells/relationCells";
 
 const col = schemaColumn<PlanetView>();
 
@@ -43,7 +43,7 @@ const columns = [
     label: "Surface Water",
     numericUnit: "%",
   }),
-  col("residents", { label: "Residents", CellComponent: PersonTagsCell }),
+  col("residents", { label: "Residents", CellComponent: PeopleTagsCell }),
   col("films", { label: "Films", CellComponent: FilmTagsCell }),
 ];
 

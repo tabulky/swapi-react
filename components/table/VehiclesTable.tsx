@@ -13,7 +13,7 @@ import {
 } from "../resource-table";
 
 import { createNameCell } from "./cells/createNameCell";
-import { FilmTagsCell, PersonTagsCell } from "./cells/relationCells";
+import { FilmTagsCell, PeopleTagsCell } from "./cells/relationCells";
 
 const col = schemaColumn<VehicleView>();
 
@@ -44,7 +44,7 @@ const columns = [
     numericUnit: " kg",
   }),
   col("consumables", { type: "text", label: "Consumables" }),
-  col("pilots", { label: "Pilots", CellComponent: PersonTagsCell }),
+  col("pilots", { label: "Pilots", CellComponent: PeopleTagsCell }),
   col("films", { label: "Films", CellComponent: FilmTagsCell }),
 ];
 

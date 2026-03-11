@@ -13,7 +13,7 @@ import {
 } from "../resource-table";
 
 import { createNameCell } from "./cells/createNameCell";
-import { FilmTagsCell, PersonTagsCell } from "./cells/relationCells";
+import { FilmTagsCell, PeopleTagsCell } from "./cells/relationCells";
 
 const col = schemaColumn<StarshipView>();
 
@@ -46,7 +46,7 @@ const columns = [
   col("hyperdrive_rating", { type: "numeric", label: "Hyperdrive Rating" }),
   col("MGLT", { type: "numeric", label: "MGLT" }),
   col("consumables", { type: "text", label: "Consumables" }),
-  col("pilots", { label: "Pilots", CellComponent: PersonTagsCell }),
+  col("pilots", { label: "Pilots", CellComponent: PeopleTagsCell }),
   col("films", { label: "Films", CellComponent: FilmTagsCell }),
 ];
 

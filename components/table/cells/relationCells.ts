@@ -39,7 +39,7 @@ export const StarshipTagsCell = createRelationTagsCell(
   "/starships",
 );
 
-export const PersonTagsCell = createRelationTagsCell(
+export const PeopleTagsCell = createRelationTagsCell(
   PeopleResource,
   "name",
   "/people",

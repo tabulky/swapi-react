@@ -15,7 +15,7 @@ import {
 import { createNameCell } from "./cells/createNameCell";
 import {
   FilmTagsCell,
-  PersonTagsCell,
+  PeopleTagsCell,
   PlanetLinkCell,
 } from "./cells/relationCells";
 
@@ -43,7 +43,7 @@ const columns = [
   col("hair_colors", { type: "tagArray", label: "Hair Colors" }),
   col("eye_colors", { type: "tagArray", label: "Eye Colors" }),
   col("homeworld", { label: "Homeworld", CellComponent: PlanetLinkCell }),
-  col("people", { label: "People", CellComponent: PersonTagsCell }),
+  col("people", { label: "People", CellComponent: PeopleTagsCell }),
   col("films", { label: "Films", CellComponent: FilmTagsCell }),
 ];
 
